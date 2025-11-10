@@ -1,7 +1,10 @@
 package com.worldconquest;
 
+import java.awt.DisplayMode;
+import java.awt.GraphicsEnvironment;
+
 import com.jme3.app.SimpleApplication;
-import com.jme3.input.ChaseCamera;
+
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
@@ -9,23 +12,29 @@ import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Spatial;
 import com.jme3.system.AppSettings;
+import com.worldconquest.controls.OrbitCamera;
 import com.jme3.bounding.BoundingBox;
 
 public class WorldConquest extends SimpleApplication {
 
     private Spatial earth;
+    private OrbitCamera orbitCamera;
 
     public static void main(String[] args) {
         WorldConquest app = new WorldConquest();
 
-        // Create AppSettings and enable fullscreen
         AppSettings settings = new AppSettings(true);
-        settings.setFullscreen(true);                // enable fullscreen
-        settings.setResolution(1920, 1080);          // set resolution (optional)
-        settings.setTitle("World Conquest");         // window title
+        settings.setFullscreen(true);
+
+        // Use system resolution safely
+        DisplayMode mode = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDisplayMode();
+        settings.setResolution(mode.getWidth(), mode.getHeight());
+
+        settings.setResizable(false);
+        settings.setTitle("World Conquest");
+        app.setDisplayStatView(false);
         app.setSettings(settings);
-        app.setShowSettings(false); // skip settings dialog
-        
+        app.setShowSettings(false);
         app.start();
         
     }
@@ -53,29 +62,9 @@ public class WorldConquest extends SimpleApplication {
     }
 
     private void setUpCamera() {
-        ChaseCamera chaseCam = new ChaseCamera(cam, earth, inputManager);
-
-    
-        chaseCam.setDragToRotate(true);
-
-       
-        chaseCam.setHideCursorOnRotate(false);
-
-        
-        chaseCam.setDefaultDistance(20f);
-        chaseCam.setMinDistance(11f);
-        chaseCam.setMaxDistance(100f);
-        chaseCam.setRotationSpeed(2f);
-        chaseCam.setSmoothMotion(false);
-        chaseCam.setZoomSensitivity(2f);
-        chaseCam.setDefaultVerticalRotation(FastMath.PI / 6);
-        chaseCam.setInvertVerticalAxis(true);
-
-        
-        enqueue(() -> {
-            inputManager.setCursorVisible(true);
-            return null;
-        });
+        orbitCamera = new OrbitCamera(cam, inputManager, earth);
+        inputManager.setCursorVisible(true);
+        orbitCamera.updateCamera();
     }
 
     private void setUpLight() {
@@ -86,23 +75,23 @@ public class WorldConquest extends SimpleApplication {
 
         DirectionalLight moon = new DirectionalLight();
         moon.setDirection(new Vector3f(1, 0, 1).normalizeLocal());
-        moon.setColor(ColorRGBA.White.mult(0.4f)); 
+        moon.setColor(ColorRGBA.White.mult(0.5f)); 
         rootNode.addLight(moon);
 
         DirectionalLight fill = new DirectionalLight();
         fill.setDirection(new Vector3f(1, 0, -1).normalizeLocal());
-        fill.setColor(ColorRGBA.White.mult(0.2f));
+        fill.setColor(ColorRGBA.White.mult(0.3f));
         rootNode.addLight(fill);
 
         DirectionalLight fill2 = new DirectionalLight();
         fill2.setDirection(new Vector3f(-1, 0, 1).normalizeLocal());
-        fill2.setColor(ColorRGBA.White.mult(0.2f));
+        fill2.setColor(ColorRGBA.White.mult(0.3f));
         rootNode.addLight(fill2);
     }
 
     @Override
     public void simpleUpdate(float tpf) {
-        
+        //orbitCamera.updateCamera();
     }
 
     @Override
