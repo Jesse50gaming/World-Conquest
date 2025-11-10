@@ -21,14 +21,14 @@ public class OrbitCamera implements AnalogListener, ActionListener {
     private final InputManager inputManager;
     private final Spatial target;
 
-    private float distance = 20f;
-    private float minDistance = 11f;
-    private float maxDistance = 100f;
+    private float distance = 150f;
+    private float minDistance = 110f;
+    private float maxDistance = 1000f;
 
     private float azimuth = 0f; // horizontal angle
     private float elevation = FastMath.PI / 6; // vertical angle
     private float rotationSpeed = 1f;
-    private float zoomSpeed = 2f;
+    private float zoomSpeed = 8f;
 
     private boolean rotating = false;
     

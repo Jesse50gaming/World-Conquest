@@ -2,22 +2,23 @@ package com.worldconquest;
 
 import java.awt.DisplayMode;
 import java.awt.GraphicsEnvironment;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import com.jme3.app.SimpleApplication;
 
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
-import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
-import com.jme3.scene.Spatial;
 import com.jme3.system.AppSettings;
 import com.worldconquest.controls.OrbitCamera;
-import com.jme3.bounding.BoundingBox;
 
 public class WorldConquest extends SimpleApplication {
 
-    private Spatial earth;
+    public Earth earth;
     private OrbitCamera orbitCamera;
 
     public static void main(String[] args) {
@@ -41,33 +42,56 @@ public class WorldConquest extends SimpleApplication {
 
     @Override
     public void simpleInitApp() {
-        setUpLight();
-        setUpEarth();
-        setUpCamera();
-        inputManager.setCursorVisible(true);
+
+        earth = new Earth(this);
+        initLight();
+        initCamera();
+        initCities();
     }
+    
+    private void initCities() {
+        InputStream is = getClass().getResourceAsStream("/Data/cities/1000-cities.csv");
+        if (is == null) {
+            System.out.println("File not found in resources!");
+            return;
+        }
 
-    private void setUpEarth() {
-        earth = assetManager.loadModel("Models/Earth/Earth_1_12756.glb");
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
+            String line;
+            boolean firstLine = true;
 
-        
-        BoundingBox bb = (BoundingBox) earth.getWorldBound();
-        float maxExtent = Math.max(bb.getXExtent(), Math.max(bb.getYExtent(), bb.getZExtent()));
-        float scaleFactor = 10f / maxExtent; // scale to ~10 units
-        earth.scale(scaleFactor);
+            while ((line = reader.readLine()) != null) {
+                if (firstLine) {
+                    firstLine = false;
+                    continue;
+                }
 
-        earth.rotate(0, FastMath.DEG_TO_RAD * 90, 0);
-        earth.setLocalTranslation(0f, 0f, 0f);
-        rootNode.attachChild(earth);
+                String[] parts = line.split(",");
+                float lat = Float.parseFloat(parts[1].trim());
+                float lon = Float.parseFloat(parts[2].trim());
+                String name = parts[3].trim();
+                
+                int population = Integer.parseInt(parts[5].trim());
+
+                City city = new City(this, lat, lon, population, name);
+                earth.addCity(city);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+    
 
-    private void setUpCamera() {
-        orbitCamera = new OrbitCamera(cam, inputManager, earth);
+    
+
+    private void initCamera() {
+        orbitCamera = new OrbitCamera(cam, inputManager, earth.getEarthSpatial());
         inputManager.setCursorVisible(true);
         orbitCamera.updateCamera();
     }
 
-    private void setUpLight() {
+    private void initLight() {
         DirectionalLight sun = new DirectionalLight();
         sun.setDirection(new Vector3f(-1, 0, -1).normalizeLocal());
         sun.setColor(ColorRGBA.White.mult(1f));  
@@ -75,17 +99,17 @@ public class WorldConquest extends SimpleApplication {
 
         DirectionalLight moon = new DirectionalLight();
         moon.setDirection(new Vector3f(1, 0, 1).normalizeLocal());
-        moon.setColor(ColorRGBA.White.mult(0.5f)); 
+        moon.setColor(ColorRGBA.White.mult(1f)); 
         rootNode.addLight(moon);
 
         DirectionalLight fill = new DirectionalLight();
         fill.setDirection(new Vector3f(1, 0, -1).normalizeLocal());
-        fill.setColor(ColorRGBA.White.mult(0.3f));
+        fill.setColor(ColorRGBA.White.mult(1f));
         rootNode.addLight(fill);
 
         DirectionalLight fill2 = new DirectionalLight();
         fill2.setDirection(new Vector3f(-1, 0, 1).normalizeLocal());
-        fill2.setColor(ColorRGBA.White.mult(0.3f));
+        fill2.setColor(ColorRGBA.White.mult(1f));
         rootNode.addLight(fill2);
     }
 
@@ -97,5 +121,9 @@ public class WorldConquest extends SimpleApplication {
     @Override
     public void simpleRender(RenderManager rm) {
         // optional render code
+    }
+
+    public Earth getEarth() {
+        return earth;
     }
 }

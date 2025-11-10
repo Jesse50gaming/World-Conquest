@@ -44,7 +44,7 @@ dependencies {
     implementation 'org.jmonkeyengine:jme3-terrain:' + jmonkeyengineVersion
     implementation 'org.jmonkeyengine:jme3-effects:' + jmonkeyengineVersion
     runtimeOnly 'org.jmonkeyengine:jme3-lwjgl3:' + jmonkeyengineVersion
-
+    
 
 }
 
