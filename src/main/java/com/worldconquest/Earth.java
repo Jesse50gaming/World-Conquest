@@ -1,5 +1,9 @@
 package com.worldconquest;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import com.jme3.bounding.BoundingBox;
@@ -25,7 +29,7 @@ public class Earth {
     public void initEarth() {
         earthSpatial = wc.getAssetManager().loadModel("Models/Earth/Earth_1_12756.glb");
 
-        BoundingBox bb = (BoundingBox) earthSpatial.getWorldBound(); 
+        BoundingBox bb = (BoundingBox) earthSpatial.getWorldBound();
         float maxExtent = Math.max(bb.getXExtent(), Math.max(bb.getYExtent(), bb.getZExtent()));
         float scaleFactor = radius / maxExtent;
         earthSpatial.scale(scaleFactor);
@@ -35,6 +39,64 @@ public class Earth {
         wc.getRootNode().attachChild(earthSpatial);
 
         
+    }
+    
+    public void loadCitiesFromGeoNames(int minPopulation) {
+
+        InputStream geoNamesStream = getClass().getResourceAsStream("/Data/cities/geonames-all-cities-with-a-population-1000.csv");
+        
+        if (geoNamesStream == null) {
+            System.err.println("GeoNames city file not found in resources!");
+            return;
+        }
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(geoNamesStream))) {
+            String line;
+            boolean firstLine = true;
+
+            while ((line = reader.readLine()) != null) {
+                if (firstLine) {
+                    firstLine = false;
+                    continue;
+                }
+
+                String[] parts = line.split(";");
+                if (parts.length < 20) continue;
+
+                String name = parts[1].trim();
+                String countryName = parts[7].trim();
+                String populationStr = parts[13].trim();
+                String coordinates = parts[19].trim();
+
+                if (populationStr.isEmpty() || coordinates.isEmpty()) continue;
+
+                int population;
+                try {
+                    population = Integer.parseInt(populationStr);
+                } catch (NumberFormatException e) {
+                    continue;
+                }
+
+                if (population < minPopulation) continue;
+
+                String[] coords = coordinates.split(",");
+                if (coords.length != 2) continue;
+
+                float latitude, longitude;
+                try {
+                    latitude = Float.parseFloat(coords[0]);
+                    longitude = Float.parseFloat(coords[1]);
+                } catch (NumberFormatException e) {
+                    continue;
+                }
+
+                City city = new City(wc, latitude, longitude, population, name, countryName);
+                addCity(city);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     
     public Spatial getEarthSpatial() {

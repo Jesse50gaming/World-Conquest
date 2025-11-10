@@ -2,17 +2,18 @@ package com.worldconquest;
 
 import java.awt.DisplayMode;
 import java.awt.GraphicsEnvironment;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+
 
 import com.jme3.app.SimpleApplication;
-
+import com.jme3.collision.CollisionResults;
+import com.jme3.font.BitmapText;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Ray;
+import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
+import com.jme3.scene.Geometry;
 import com.jme3.system.AppSettings;
 import com.worldconquest.controls.OrbitCamera;
 
@@ -44,54 +45,13 @@ public class WorldConquest extends SimpleApplication {
     public void simpleInitApp() {
 
         earth = new Earth(this);
+        earth.loadCitiesFromGeoNames(50000);
         initLight();
         initCamera();
-        initCities();
-
-        /*  test group
-        City city = new City(this, 51.5072f, 0.1276f, 100, "london");
-        earth.addCity(city);
-        City city1 = new City(this, 41.8967f, 12.4822f, 1000, "Rome");
-        earth.addCity(city1);
-        City city2 = new City(this, 40.71f, -74f, 1000000, "DC");
-        earth.addCity(city2);
-        */
+        
+        
     }
     
-    private void initCities() {
-        InputStream is = getClass().getResourceAsStream("/Data/cities/1000-cities.csv");
-        if (is == null) {
-            System.out.println("File not found in resources!");
-            return;
-        }
-
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
-            String line;
-            boolean firstLine = true;
-
-            while ((line = reader.readLine()) != null) {
-                if (firstLine) {
-                    firstLine = false;
-                    continue;
-                }
-
-                String[] parts = line.split(",");
-                float lat = Float.parseFloat(parts[1].trim());
-                float lon = Float.parseFloat(parts[2].trim());
-                String name = parts[3].trim();
-                
-                int population = Integer.parseInt(parts[5].trim());
-
-                City city = new City(this, lat, lon, population, name);
-                earth.addCity(city);
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    
-
     
 
     private void initCamera() {
@@ -103,12 +63,12 @@ public class WorldConquest extends SimpleApplication {
     private void initLight() {
         DirectionalLight sun = new DirectionalLight();
         sun.setDirection(new Vector3f(-1, 0, -1).normalizeLocal());
-        sun.setColor(ColorRGBA.White.mult(1f));  
+        sun.setColor(ColorRGBA.White.mult(1f));
         rootNode.addLight(sun);
 
         DirectionalLight moon = new DirectionalLight();
         moon.setDirection(new Vector3f(1, 0, 1).normalizeLocal());
-        moon.setColor(ColorRGBA.White.mult(1f)); 
+        moon.setColor(ColorRGBA.White.mult(1f));
         rootNode.addLight(moon);
 
         DirectionalLight fill = new DirectionalLight();
@@ -121,10 +81,52 @@ public class WorldConquest extends SimpleApplication {
         fill2.setColor(ColorRGBA.White.mult(1f));
         rootNode.addLight(fill2);
     }
+    
+    private void cityRayCast() {
+        Vector2f mousePos = inputManager.getCursorPosition();
+        CollisionResults results = new CollisionResults();
+        Vector3f click3d = cam.getWorldCoordinates(mousePos, 0f).clone();
+        Vector3f dir = cam.getWorldCoordinates(mousePos, 1f).subtractLocal(click3d).normalizeLocal();
+        Ray ray = new Ray(click3d, dir);
+        Vector2f cursor = inputManager.getCursorPosition();
+        rootNode.collideWith(ray, results);
+
+        if (results.size() > 0) {
+            Geometry target = results.getClosestCollision().getGeometry();
+
+            if (target.getUserData("cityName") != null) {
+                String name = target.getUserData("cityName");
+                int pop = target.getUserData("population");
+                String countryName = target.getUserData("countryName");
+                guiNode.detachAllChildren();
+
+                BitmapText info = new BitmapText(guiFont);
+                info.setSize(guiFont.getCharSet().getRenderedSize());
+                info.setColor(ColorRGBA.White);
+                info.setText(name + ", " + countryName + "\nPop: " + formatPopulation(pop));
+                info.setLocalTranslation(cursor.x + 15, cursor.y + 15, 0);
+                guiNode.attachChild(info);
+            } else {
+                guiNode.detachAllChildren();
+            }
+        } else {
+            guiNode.detachAllChildren();
+        }
+    }
+
+    private String formatPopulation(int population) {
+        if (population >= 1_000_000) {
+            return String.format("%.1fm", population / 1_000_000.0);
+        } else if (population >= 1_000) {
+            return String.format("%.0fk", population / 1_000.0);
+        } else {
+            return String.valueOf(population);
+        }
+    }
 
     @Override
     public void simpleUpdate(float tpf) {
-        //orbitCamera.updateCamera();
+        cityRayCast();
     }
 
     @Override

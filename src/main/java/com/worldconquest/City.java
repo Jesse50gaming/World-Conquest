@@ -15,20 +15,22 @@ public class City {
     int population;
     Coordinate coordinates;
     String name;
+    Geometry cityGeometry;
+    String countryName;
 
-    public City(WorldConquest wc, float lat, float lon, int population, String name) {
+    public City(WorldConquest wc, float lat, float lon, int population, String name, String countryName) {
         this.wc = wc;
         this.population = population;
         this.name = name;
+        this.countryName = countryName;
         coordinates = new Coordinate(lat, lon, wc);
 
         initCity();
     }
     
     private void initCity() {
-        Geometry cityGeometry;
 
-        float heightOffset; 
+        float heightOffset;
 
         if (population < 1000000) {
             float cylRadius = 0.2f;
@@ -54,7 +56,7 @@ public class City {
 
             Vector3f direction = pos.normalize();
             cityGeometry.lookAt(pos.add(direction), Vector3f.UNIT_Y);
-            
+
             heightOffset = 0.2f; // half box height
             cityGeometry.setLocalTranslation(pos.add(pos.normalize().mult(heightOffset)));
         }
@@ -63,8 +65,24 @@ public class City {
         Material mat = new Material(wc.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
         mat.setColor("Color", ColorRGBA.Red);
         cityGeometry.setMaterial(mat);
-
+        cityGeometry.setUserData("cityName", name);
+        cityGeometry.setUserData("population", population);
+        cityGeometry.setUserData("countryName", countryName);
         wc.getRootNode().attachChild(cityGeometry);
+
+        
+    }
+    
+    public String getName() {
+        return name;
+    }
+
+    public int getPopulation() {
+        return population;
+    }
+
+    public Geometry getCityGeometry() {
+        return cityGeometry;
     }
 
 }
