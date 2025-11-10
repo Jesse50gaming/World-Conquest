@@ -47,6 +47,15 @@ public class WorldConquest extends SimpleApplication {
         initLight();
         initCamera();
         initCities();
+
+        /*  test group
+        City city = new City(this, 51.5072f, 0.1276f, 100, "london");
+        earth.addCity(city);
+        City city1 = new City(this, 41.8967f, 12.4822f, 1000, "Rome");
+        earth.addCity(city1);
+        City city2 = new City(this, 40.71f, -74f, 1000000, "DC");
+        earth.addCity(city2);
+        */
     }
     
     private void initCities() {

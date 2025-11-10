@@ -21,7 +21,7 @@ public class Coordinate {
     public Vector3f coordinateToVector() {
         // Convert degrees to radians
         float latRad = FastMath.DEG_TO_RAD * lat;
-        float lonRad = FastMath.DEG_TO_RAD * lon;
+        float lonRad = -FastMath.DEG_TO_RAD * lon;
 
         float x = radius * FastMath.cos(latRad) * FastMath.cos(lonRad);
         float y = radius * FastMath.sin(latRad);
