@@ -11,6 +11,7 @@ import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Spatial;
+import com.worldconquest.WorldConquest;
 
 /**
  * Orbit-style camera that keeps cursor visible and moves naturally.
@@ -21,23 +22,30 @@ public class OrbitCamera implements AnalogListener, ActionListener {
     private final InputManager inputManager;
     private final Spatial target;
 
-    private float distance = 150f;
-    private float minDistance = 110f;
-    private float maxDistance = 1000f;
+    private float distance;
+    private float minDistance;
+    private float maxDistance;
 
     private float azimuth = 0f; // horizontal angle
     private float elevation = FastMath.PI / 6; // vertical angle
     private float rotationSpeed = 1f;
-    private float zoomSpeed = 8f;
-
+    private float zoomSpeed;
+    private float radius;
     private boolean rotating = false;
+    private WorldConquest wc;
     
 
-    public OrbitCamera(Camera cam, InputManager inputManager, Spatial target) {
+    public OrbitCamera(Camera cam, InputManager inputManager, Spatial target,WorldConquest wc) {
         this.cam = cam;
         this.inputManager = inputManager;
         this.target = target;
         registerInput();
+        this.wc = wc;
+        this.radius = wc.getEarth().getRadius();
+        this.distance = radius * 1.5f;
+        this.minDistance = radius * 1.1f;
+        this.maxDistance = radius * 10f;
+        this.zoomSpeed = radius * 0.08f;
     }
 
     private void registerInput() {

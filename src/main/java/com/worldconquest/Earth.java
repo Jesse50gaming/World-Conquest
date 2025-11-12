@@ -15,7 +15,7 @@ public class Earth {
 
     WorldConquest wc;
 
-    public float radius = 100f;
+    public float radius = 500f;
     private Spatial earthSpatial;
 
     ArrayList<City> cities;

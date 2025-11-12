@@ -33,23 +33,37 @@ public class City {
         float heightOffset;
 
         if (population < 1000000) {
-            float cylRadius = 0.2f;
+            float maxR = 1f;
+            float minR = 0.2f;
             float cylHeight = 0.2f;
             heightOffset = cylHeight / 2f;
+
+            
+            float minPop = 50000f;
+            float maxPop = 1000000f;
+            float normalized = (population - minPop) / (maxPop - minPop);
+            normalized = Math.max(0, Math.min(1, normalized));
+
+            float cylRadius = minR + normalized * (maxR - minR);
 
             Cylinder cylinder = new Cylinder(16, 16, cylRadius, cylHeight, true);
             cityGeometry = new Geometry(name, cylinder);
 
-            //point out
             Vector3f pos = coordinates.coordinateToVector();
             Vector3f direction = pos.normalize();
             cityGeometry.lookAt(pos.add(direction), Vector3f.UNIT_Y);
-
-            // move to surface
             cityGeometry.setLocalTranslation(pos.add(direction.mult(heightOffset)));
-
         } else {
-            Box box = new Box(0.4f, 0.4f, 0.2f);
+            float maxS = 3f;
+            float minS = 1f;
+            float boxHeight = 0.4f;
+            float minPop = 1000000f;
+            float maxPop = 20000000f;
+            float normalized = (population - minPop) / (maxPop - minPop);
+            normalized = Math.max(0, Math.min(1, normalized));
+            float sideLength = minS + normalized * (maxS - minS);
+
+            Box box = new Box(sideLength, sideLength, boxHeight);
             cityGeometry = new Geometry(name, box);
 
             Vector3f pos = coordinates.coordinateToVector();
@@ -57,7 +71,7 @@ public class City {
             Vector3f direction = pos.normalize();
             cityGeometry.lookAt(pos.add(direction), Vector3f.UNIT_Y);
 
-            heightOffset = 0.2f; // half box height
+            heightOffset = boxHeight; // half box height
             cityGeometry.setLocalTranslation(pos.add(pos.normalize().mult(heightOffset)));
         }
 

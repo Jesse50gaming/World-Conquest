@@ -55,7 +55,7 @@ public class WorldConquest extends SimpleApplication {
     
 
     private void initCamera() {
-        orbitCamera = new OrbitCamera(cam, inputManager, earth.getEarthSpatial());
+        orbitCamera = new OrbitCamera(cam, inputManager, earth.getEarthSpatial(),this);
         inputManager.setCursorVisible(true);
         orbitCamera.updateCamera();
     }

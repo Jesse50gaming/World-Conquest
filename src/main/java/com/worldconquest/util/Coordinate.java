@@ -20,12 +20,19 @@ public class Coordinate {
 
     public Vector3f coordinateToVector() {
         // Convert degrees to radians
-        float latRad = FastMath.DEG_TO_RAD * lat;
-        float lonRad = -FastMath.DEG_TO_RAD * lon;
+        //float latRad = FastMath.DEG_TO_RAD * lat;
+        //float lonRad = -FastMath.DEG_TO_RAD * lon;
 
-        float x = radius * FastMath.cos(latRad) * FastMath.cos(lonRad);
-        float y = radius * FastMath.sin(latRad);
-        float z = radius * FastMath.cos(latRad) * FastMath.sin(lonRad);
+        //float x = radius * FastMath.cos(latRad) * FastMath.cos(lonRad);
+        //float y = radius * FastMath.sin(latRad);
+        //float z = radius * FastMath.cos(latRad) * FastMath.sin(lonRad);
+
+        float latRad = (float) Math.toRadians(lat);
+        float lonRad = (float) -Math.toRadians(lon);
+
+        float x = (float) (radius * Math.cos(latRad) * Math.cos(lonRad));
+        float y = (float) (radius * Math.sin(latRad));
+        float z = (float) (radius * Math.cos(latRad) * Math.sin(lonRad));
 
         return new Vector3f(x, y, z);
     }
