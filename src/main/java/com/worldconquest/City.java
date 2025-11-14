@@ -35,10 +35,9 @@ public class City {
         if (population < 1000000) {
             float maxR = 1f;
             float minR = 0.2f;
-            float cylHeight = 0.2f;
+            float cylHeight = 1f;
             heightOffset = cylHeight / 2f;
 
-            
             float minPop = 50000f;
             float maxPop = 1000000f;
             float normalized = (population - minPop) / (maxPop - minPop);
@@ -46,7 +45,7 @@ public class City {
 
             float cylRadius = minR + normalized * (maxR - minR);
 
-            Cylinder cylinder = new Cylinder(16, 16, cylRadius, cylHeight, true);
+            Cylinder cylinder = new Cylinder(16, 16, cylRadius, cylHeight * specialCountryHeightMult(countryName), true);
             cityGeometry = new Geometry(name, cylinder);
 
             Vector3f pos = coordinates.coordinateToVector();
@@ -56,14 +55,14 @@ public class City {
         } else {
             float maxS = 3f;
             float minS = 1f;
-            float boxHeight = 0.4f;
+            float boxHeight = 1f;
             float minPop = 1000000f;
             float maxPop = 20000000f;
             float normalized = (population - minPop) / (maxPop - minPop);
             normalized = Math.max(0, Math.min(1, normalized));
             float sideLength = minS + normalized * (maxS - minS);
 
-            Box box = new Box(sideLength, sideLength, boxHeight);
+            Box box = new Box(sideLength, sideLength, boxHeight * specialCountryHeightMult(countryName));
             cityGeometry = new Geometry(name, box);
 
             Vector3f pos = coordinates.coordinateToVector();
@@ -71,7 +70,7 @@ public class City {
             Vector3f direction = pos.normalize();
             cityGeometry.lookAt(pos.add(direction), Vector3f.UNIT_Y);
 
-            heightOffset = boxHeight; // half box height
+            heightOffset = boxHeight / 2;
             cityGeometry.setLocalTranslation(pos.add(pos.normalize().mult(heightOffset)));
         }
 
@@ -84,7 +83,15 @@ public class City {
         cityGeometry.setUserData("countryName", countryName);
         wc.getRootNode().attachChild(cityGeometry);
 
-        
+    }
+    
+    private float specialCountryHeightMult(String country) {
+        if(country.equals("Japan")) {
+            return 3;
+        } else if (country.equals("Argentina")) {
+            return 2;
+        }
+        return 1;
     }
     
     public String getName() {

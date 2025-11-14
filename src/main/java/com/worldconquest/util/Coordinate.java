@@ -2,7 +2,7 @@ package com.worldconquest.util;
 
 import com.jme3.math.Vector3f;
 import com.worldconquest.WorldConquest;
-import com.jme3.math.FastMath;
+
 
 public class Coordinate {
 

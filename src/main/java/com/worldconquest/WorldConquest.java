@@ -19,21 +19,25 @@ import com.worldconquest.controls.OrbitCamera;
 
 public class WorldConquest extends SimpleApplication {
 
+    public static int FPS = 60;
     public Earth earth;
     private OrbitCamera orbitCamera;
+    private int frameNum = 0;
+    private int slowUpdateSpeed = 5; //seconds
 
     public static void main(String[] args) {
         WorldConquest app = new WorldConquest();
 
         AppSettings settings = new AppSettings(true);
         settings.setFullscreen(true);
-
-        // Use system resolution safely
+        
+        
         DisplayMode mode = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDisplayMode();
         settings.setResolution(mode.getWidth(), mode.getHeight());
 
         settings.setResizable(false);
         settings.setTitle("World Conquest");
+        settings.setFrameRate(FPS);
         app.setDisplayStatView(false);
         app.setSettings(settings);
         app.setShowSettings(false);
@@ -42,13 +46,12 @@ public class WorldConquest extends SimpleApplication {
     }
 
     @Override
-    public void simpleInitApp() {
-
+    public void simpleInitApp() {  
         earth = new Earth(this);
         earth.loadCitiesFromGeoNames(50000);
         initLight();
         initCamera();
-        
+
         
     }
     
@@ -115,10 +118,10 @@ public class WorldConquest extends SimpleApplication {
     }
 
     private String formatPopulation(int population) {
-        if (population >= 1_000_000) {
-            return String.format("%.1fm", population / 1_000_000.0);
-        } else if (population >= 1_000) {
-            return String.format("%.0fk", population / 1_000.0);
+        if (population >= 1000000) {
+            return String.format("%.1fm", population / 1000000.0);
+        } else if (population >= 1000) {
+            return String.format("%.0fk", population / 1000.0);
         } else {
             return String.valueOf(population);
         }
@@ -127,6 +130,16 @@ public class WorldConquest extends SimpleApplication {
     @Override
     public void simpleUpdate(float tpf) {
         cityRayCast();
+
+        if (frameNum == FPS * slowUpdateSpeed) {
+            frameNum = 0;
+            slowUpdate();
+        }
+        frameNum++;
+    }
+    
+    private void slowUpdate() {
+        
     }
 
     @Override

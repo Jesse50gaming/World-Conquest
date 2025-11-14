@@ -44,7 +44,7 @@ public class OrbitCamera implements AnalogListener, ActionListener {
         this.radius = wc.getEarth().getRadius();
         this.distance = radius * 1.5f;
         this.minDistance = radius * 1.1f;
-        this.maxDistance = radius * 10f;
+        this.maxDistance = radius * 2.8f;
         this.zoomSpeed = radius * 0.08f;
     }
 

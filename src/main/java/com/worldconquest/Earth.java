@@ -53,6 +53,7 @@ public class Earth {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(geoNamesStream))) {
             String line;
             boolean firstLine = true;
+            ArrayList<String> countryNames;
 
             while ((line = reader.readLine()) != null) {
                 if (firstLine) {
@@ -89,6 +90,12 @@ public class Earth {
                 } catch (NumberFormatException e) {
                     continue;
                 }
+                
+                /* 
+                if (countryName.equals("Japan")) {
+                    System.out.println(name + ", " + countryName + " - " + population);
+                }
+                */
 
                 City city = new City(wc, latitude, longitude, population, name, countryName);
                 addCity(city);
