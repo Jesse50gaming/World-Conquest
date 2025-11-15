@@ -130,6 +130,7 @@ public class WorldConquest extends SimpleApplication {
     @Override
     public void simpleUpdate(float tpf) {
         cityRayCast();
+        earth.update();
 
         if (frameNum == FPS * slowUpdateSpeed) {
             frameNum = 0;
@@ -139,7 +140,7 @@ public class WorldConquest extends SimpleApplication {
     }
     
     private void slowUpdate() {
-        
+        earth.slowUpdate();
     }
 
     @Override

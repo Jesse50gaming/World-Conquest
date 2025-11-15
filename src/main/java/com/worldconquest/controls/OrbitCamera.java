@@ -35,13 +35,13 @@ public class OrbitCamera implements AnalogListener, ActionListener {
     private WorldConquest wc;
     
 
-    public OrbitCamera(Camera cam, InputManager inputManager, Spatial target,WorldConquest wc) {
+    public OrbitCamera(Camera cam, InputManager inputManager, Spatial target, WorldConquest wc) {
         this.cam = cam;
         this.inputManager = inputManager;
         this.target = target;
         registerInput();
         this.wc = wc;
-        this.radius = wc.getEarth().getRadius();
+        this.radius = this.wc.getEarth().getRadius();
         this.distance = radius * 1.5f;
         this.minDistance = radius * 1.1f;
         this.maxDistance = radius * 2.8f;

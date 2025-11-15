@@ -3,7 +3,6 @@ package com.worldconquest.util;
 import com.jme3.math.Vector3f;
 import com.worldconquest.WorldConquest;
 
-
 public class Coordinate {
 
     float lat, lon; // in degrees
@@ -19,21 +18,22 @@ public class Coordinate {
     }
 
     public Vector3f coordinateToVector() {
-        // Convert degrees to radians
-        //float latRad = FastMath.DEG_TO_RAD * lat;
-        //float lonRad = -FastMath.DEG_TO_RAD * lon;
-
-        //float x = radius * FastMath.cos(latRad) * FastMath.cos(lonRad);
-        //float y = radius * FastMath.sin(latRad);
-        //float z = radius * FastMath.cos(latRad) * FastMath.sin(lonRad);
-
         float latRad = (float) Math.toRadians(lat);
-        float lonRad = (float) -Math.toRadians(lon);
+        float lonRad = (float) -Math.toRadians(lon); 
 
         float x = (float) (radius * Math.cos(latRad) * Math.cos(lonRad));
         float y = (float) (radius * Math.sin(latRad));
         float z = (float) (radius * Math.cos(latRad) * Math.sin(lonRad));
 
         return new Vector3f(x, y, z);
+    }
+
+    // new getters used by hull builder
+    public float getLat() {
+        return lat;
+    }
+
+    public float getLon() {
+        return lon;
     }
 }

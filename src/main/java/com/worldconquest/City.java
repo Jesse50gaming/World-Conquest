@@ -16,20 +16,20 @@ public class City {
     Coordinate coordinates;
     String name;
     Geometry cityGeometry;
-    String countryName;
+    Country country;
 
-    public City(WorldConquest wc, float lat, float lon, int population, String name, String countryName) {
+    public City(WorldConquest wc, float lat, float lon, int population, String name, Country country) {
         this.wc = wc;
         this.population = population;
         this.name = name;
-        this.countryName = countryName;
+        this.country = country;
         coordinates = new Coordinate(lat, lon, wc);
-
         initCity();
+        
     }
     
     private void initCity() {
-
+        
         float heightOffset;
 
         if (population < 1000000) {
@@ -45,7 +45,7 @@ public class City {
 
             float cylRadius = minR + normalized * (maxR - minR);
 
-            Cylinder cylinder = new Cylinder(16, 16, cylRadius, cylHeight * specialCountryHeightMult(countryName), true);
+            Cylinder cylinder = new Cylinder(16, 16, cylRadius, cylHeight * specialCountryHeightMult(country.getName()), true);
             cityGeometry = new Geometry(name, cylinder);
 
             Vector3f pos = coordinates.coordinateToVector();
@@ -62,7 +62,7 @@ public class City {
             normalized = Math.max(0, Math.min(1, normalized));
             float sideLength = minS + normalized * (maxS - minS);
 
-            Box box = new Box(sideLength, sideLength, boxHeight * specialCountryHeightMult(countryName));
+            Box box = new Box(sideLength, sideLength, boxHeight * specialCountryHeightMult(country.getName()));
             cityGeometry = new Geometry(name, box);
 
             Vector3f pos = coordinates.coordinateToVector();
@@ -80,7 +80,7 @@ public class City {
         cityGeometry.setMaterial(mat);
         cityGeometry.setUserData("cityName", name);
         cityGeometry.setUserData("population", population);
-        cityGeometry.setUserData("countryName", countryName);
+        cityGeometry.setUserData("countryName", country.getName());
         wc.getRootNode().attachChild(cityGeometry);
 
     }
@@ -104,6 +104,10 @@ public class City {
 
     public Geometry getCityGeometry() {
         return cityGeometry;
+    }
+
+    public Coordinate getCoords() {
+        return coordinates;
     }
 
 }
