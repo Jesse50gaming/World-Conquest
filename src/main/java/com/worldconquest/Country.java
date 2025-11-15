@@ -2,16 +2,17 @@ package com.worldconquest;
 
 import java.util.ArrayList;
 
-public class Countries {
+public class Country {
 
     ArrayList<City> cities;
     WorldConquest wc;
     int population;
     String name;
 
-    public Countries(WorldConquest wc, String name) {
+    public Country(WorldConquest wc, String name) {
         this.wc = wc;
         this.name = name;
+        cities = new ArrayList<>();
     }
 
 

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.jme3.bounding.BoundingBox;
 import com.jme3.math.FastMath;
@@ -19,10 +20,12 @@ public class Earth {
     private Spatial earthSpatial;
 
     ArrayList<City> cities;
+    ArrayList<Country> countries;
 
     public Earth(WorldConquest wc) {
         this.wc = wc;
-        cities = new ArrayList<City>();
+        cities = new ArrayList<>();
+        countries = new ArrayList<>();
         initEarth();
     }
 
@@ -42,7 +45,7 @@ public class Earth {
     }
     
     public void loadCitiesFromGeoNames(int minPopulation) {
-
+        HashMap<String, Country> countryHashMap = new HashMap<>();
         InputStream geoNamesStream = getClass().getResourceAsStream("/Data/cities/geonames-all-cities-with-a-population-1000.csv");
         
         if (geoNamesStream == null) {
@@ -50,10 +53,35 @@ public class Earth {
             return;
         }
 
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(geoNamesStream))) { // countries
+            String line;
+            boolean firstLine = true;
+            
+
+            while ((line = reader.readLine()) != null) {
+                if (firstLine) {
+                    firstLine = false;
+                    continue;
+                }
+
+                String[] parts = line.split(";");
+                if (parts.length < 20) continue;
+
+               
+                String countryName = parts[7].trim();
+
+                countryHashMap.put(countryName, new Country(wc, countryName));
+            }
+
+            countries.addAll(countryHashMap.values());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(geoNamesStream))) {
             String line;
             boolean firstLine = true;
-            ArrayList<String> countryNames;
 
             while ((line = reader.readLine()) != null) {
                 if (firstLine) {
@@ -90,7 +118,7 @@ public class Earth {
                 } catch (NumberFormatException e) {
                     continue;
                 }
-                
+
                 /* 
                 if (countryName.equals("Japan")) {
                     System.out.println(name + ", " + countryName + " - " + population);
@@ -99,8 +127,10 @@ public class Earth {
 
                 City city = new City(wc, latitude, longitude, population, name, countryName);
                 addCity(city);
+                countryHashMap.get(countryName).addCity(city);
             }
-
+            
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -116,6 +146,14 @@ public class Earth {
 
     public void removeCity(City city) {
         cities.remove(city);
+    }
+
+    public void addCountry(Country country) {
+        countries.add(country);
+    }
+
+    public void removeCountry(Country country) {
+        countries.remove(country);
     }
 
     public float getRadius() {
