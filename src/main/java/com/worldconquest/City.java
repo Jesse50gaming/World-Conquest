@@ -17,6 +17,7 @@ public class City {
     String name;
     Geometry cityGeometry;
     Country country;
+    ColorRGBA color;
 
     public City(WorldConquest wc, float lat, float lon, int population, String name, Country country) {
         this.wc = wc;
@@ -25,7 +26,7 @@ public class City {
         this.country = country;
         coordinates = new Coordinate(lat, lon, wc);
         initCity();
-        
+        color = new ColorRGBA(country.getColor());
     }
     
     private void initCity() {
@@ -73,10 +74,10 @@ public class City {
             heightOffset = boxHeight / 2;
             cityGeometry.setLocalTranslation(pos.add(pos.normalize().mult(heightOffset)));
         }
-
+        
         // Material
         Material mat = new Material(wc.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
-        mat.setColor("Color", ColorRGBA.Red);
+        mat.setColor("Color", color);
         cityGeometry.setMaterial(mat);
         cityGeometry.setUserData("cityName", name);
         cityGeometry.setUserData("population", population);

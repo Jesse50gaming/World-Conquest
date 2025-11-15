@@ -1,12 +1,10 @@
 package com.worldconquest;
 
+
 import java.util.ArrayList;
 
-
 import com.jme3.math.ColorRGBA;
-
-import com.jme3.scene.Geometry;
-import com.worldconquest.util.Coordinate;
+import com.worldconquest.util.ColorHelper;
 
 
 public class Country {
@@ -15,32 +13,31 @@ public class Country {
     WorldConquest wc;
     int population;
     String name;
-    ColorRGBA overlayColor;
-    float transparency = 0.1f;
-    Geometry countryGeometry;
+    ColorRGBA color;
+    ColorHelper colorHelper = new ColorHelper();
+
 
     public Country(WorldConquest wc, String name) {
         this.wc = wc;
         this.name = name;
         cities = new ArrayList<>();
-
+        
         initCountry();
     }
 
     private void initCountry() {
-
+        
+        color = new ColorRGBA(colorHelper.getCountryColor(name));
+        if (color == null) {
+            color = new ColorRGBA(ColorRGBA.Black);
+            System.out.println("No color defined for: " + name);
+        }
     }
     
-    public void formMesh() {
-        ArrayList<Coordinate> cityCoordinates = new ArrayList<>();
-        for (City city : cities) {
-            cityCoordinates.add(city.getCoords());
-        }
-        
-    }
 
     public void slowUpdate() {
         updatePopulation();
+        
     }
 
     private void updatePopulation() {
@@ -69,7 +66,10 @@ public class Country {
         this.name = name;
     }
 
+    public ColorRGBA getColor() {
+        return color;
+    }
 
-
+    
 
 }

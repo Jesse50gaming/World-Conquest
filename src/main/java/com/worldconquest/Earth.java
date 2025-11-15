@@ -83,7 +83,11 @@ public class Earth {
             if (parts.length < 20) continue;
 
             String countryName = parts[7].trim();
-            countryHashMap.putIfAbsent(countryName, new Country(wc, countryName));
+
+            if (!countryHashMap.containsKey(countryName)) {
+                countryHashMap.putIfAbsent(countryName, new Country(wc, countryName));
+            }
+            
         }
 
         countries.addAll(countryHashMap.values());
@@ -128,9 +132,6 @@ public class Earth {
 
             City city = new City(wc, lat, lon, population, name, countryHashMap.get(countryName));
             countryHashMap.get(countryName).addCity(city);
-        }
-        for (Country c : countries) {
-            c.formMesh();
         }
     }
     
