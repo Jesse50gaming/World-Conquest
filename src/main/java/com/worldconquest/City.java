@@ -25,8 +25,9 @@ public class City {
         this.name = name;
         this.country = country;
         coordinates = new Coordinate(lat, lon, wc);
-        initCity();
         color = new ColorRGBA(country.getColor());
+        
+        initCity();
     }
     
     private void initCity() {

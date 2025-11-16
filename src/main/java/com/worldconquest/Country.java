@@ -28,10 +28,7 @@ public class Country {
     private void initCountry() {
         
         color = new ColorRGBA(colorHelper.getCountryColor(name));
-        if (color == null) {
-            color = new ColorRGBA(ColorRGBA.Black);
-            System.out.println("No color defined for: " + name);
-        }
+        
     }
     
 
@@ -67,6 +64,7 @@ public class Country {
     }
 
     public ColorRGBA getColor() {
+        
         return color;
     }
 

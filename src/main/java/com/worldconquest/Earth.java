@@ -129,8 +129,8 @@ public class Earth {
             } catch (NumberFormatException e) {
                 continue;
             }
-
-            City city = new City(wc, lat, lon, population, name, countryHashMap.get(countryName));
+            Country cityCountry = countryHashMap.get(countryName);
+            City city = new City(wc, lat, lon, population, name, cityCountry);
             countryHashMap.get(countryName).addCity(city);
         }
     }

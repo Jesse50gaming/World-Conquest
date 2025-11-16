@@ -1,5 +1,6 @@
 package com.worldconquest.util;
 
+import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.worldconquest.WorldConquest;
 
@@ -17,9 +18,17 @@ public class Coordinate {
         radius = wc.getEarth().getRadius();
     }
 
+    public Coordinate(Vector2f vector, WorldConquest wc) {
+        this.lat = vector.x;
+        this.lon = vector.y;
+        this.wc = wc;
+
+        radius = wc.getEarth().getRadius();
+    }
+
     public Vector3f coordinateToVector() {
         float latRad = (float) Math.toRadians(lat);
-        float lonRad = (float) -Math.toRadians(lon); 
+        float lonRad = (float) -Math.toRadians(lon);
 
         float x = (float) (radius * Math.cos(latRad) * Math.cos(lonRad));
         float y = (float) (radius * Math.sin(latRad));
@@ -27,8 +36,12 @@ public class Coordinate {
 
         return new Vector3f(x, y, z);
     }
+    
+    public Vector2f getVector() {
+        return new Vector2f(lat,lon);
+    }
 
-    // new getters used by hull builder
+   
     public float getLat() {
         return lat;
     }
