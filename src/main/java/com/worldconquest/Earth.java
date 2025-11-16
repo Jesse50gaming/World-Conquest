@@ -56,8 +56,7 @@ public class Earth {
     }
     
     public void loadCitiesFromGeoNames(int minPopulation) {
-        InputStream geoNamesStream = getClass().getResourceAsStream(
-                "/Data/cities/geonames-all-cities-with-a-population-1000.csv");
+        InputStream geoNamesStream = getClass().getResourceAsStream("/Data/cities/geonames-all-cities-with-a-population-1000.csv");
 
         if (geoNamesStream == null) {
             System.err.println("GeoNames city file not found in resources!");
@@ -77,17 +76,23 @@ public class Earth {
 
         boolean first = true;
         for (String line : lines) {
-            if (first) { first = false; continue; }
+            if (first) {
+                first = false;
+                continue;
+            }
 
             String[] parts = line.split(";");
             if (parts.length < 20) continue;
 
             String countryName = parts[7].trim();
 
+            countryName = countryNameFormat(countryName);
+
             if (!countryHashMap.containsKey(countryName)) {
+                if(countryName.equals("Kosovo")) System.out.println(countryName);
                 countryHashMap.putIfAbsent(countryName, new Country(wc, countryName));
             }
-            
+
         }
 
         countries.addAll(countryHashMap.values());
@@ -107,6 +112,8 @@ public class Earth {
             String countryName = parts[7].trim();
             String populationStr = parts[13].trim();
             String coordStr = parts[19].trim();
+
+            countryName = countryNameFormat(countryName);
 
             if (populationStr.isEmpty() || coordStr.isEmpty()) continue;
 
@@ -133,6 +140,28 @@ public class Earth {
             City city = new City(wc, lat, lon, population, name, cityCountry);
             countryHashMap.get(countryName).addCity(city);
         }
+    }
+    
+    private String countryNameFormat(String countryName) {
+        String formated;
+        if (countryName.contains(",")) {
+            String[] parts = countryName.split(",");
+            if (countryName.equals("Congo, Democratic Republic of the")) {
+                formated = parts[1] + " " + parts[0];
+                return formated.trim();
+            } else if (countryName.equals("Korea, Republic of")) {
+                return "South Korea";
+            } else if (countryName.equals("Korea, Dem. People's Rep. of")) {
+                return "North Korea";
+            } else if (countryName.equals("Macedonia, The former Yugoslav Rep. of")) {
+                return "North Macedonia";
+            } else {
+
+                return parts[0];
+            }
+
+        }
+        return countryName;
     }
     
     public Spatial getEarthSpatial() {

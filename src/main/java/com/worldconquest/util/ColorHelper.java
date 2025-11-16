@@ -48,6 +48,7 @@ public class ColorHelper {
         if (countryColorMap.get(name) != null) {
             return countryColorMap.get(name);
         }
+        System.out.println(name);
         return ColorRGBA.Black;
         
     }
@@ -65,14 +66,14 @@ public class ColorHelper {
         countryColorMap.put("Marshall Islands", COLORS[8]);
         countryColorMap.put("Panama", COLORS[9]);
         countryColorMap.put("Guadeloupe", COLORS[0]);
-        countryColorMap.put("Tanzania, United Republic of", COLORS[1]);
+        countryColorMap.put("Tanzania", COLORS[1]);
         countryColorMap.put("Argentina", COLORS[2]);
-        countryColorMap.put("Macau, China", COLORS[3]);
+        countryColorMap.put("Macau", COLORS[3]);
         countryColorMap.put("Seychelles", COLORS[4]);
         countryColorMap.put("Belize", COLORS[5]);
         countryColorMap.put("Zambia", COLORS[6]);
         countryColorMap.put("Bahrain", COLORS[7]);
-        countryColorMap.put("Congo", COLORS[8]);
+        countryColorMap.put("Congo", COLORS[7]);
         countryColorMap.put("Guinea-Bissau", COLORS[9]);
         countryColorMap.put("Namibia", COLORS[0]);
         countryColorMap.put("Finland", COLORS[1]);
@@ -89,7 +90,7 @@ public class ColorHelper {
         countryColorMap.put("Sweden", COLORS[2]);
         countryColorMap.put("Malawi", COLORS[3]);
         countryColorMap.put("Andorra", COLORS[4]);
-        countryColorMap.put("Sudan, The Republic of", COLORS[5]);
+        countryColorMap.put("Sudan", COLORS[5]);
         countryColorMap.put("Liechtenstein", COLORS[6]);
         countryColorMap.put("Poland", COLORS[7]);
         countryColorMap.put("Bulgaria", COLORS[8]);
@@ -125,7 +126,7 @@ public class ColorHelper {
         countryColorMap.put("Gabon", COLORS[8]);
         countryColorMap.put("Luxembourg", COLORS[9]);
         countryColorMap.put("Brazil", COLORS[ColorNum.Green.getNum()]);
-        countryColorMap.put("Korea, Republic of", COLORS[1]);
+        countryColorMap.put("South Korea", COLORS[1]);
         countryColorMap.put("Turks and Caicos Islands", COLORS[2]);
         countryColorMap.put("Algeria", COLORS[3]);
         countryColorMap.put("Slovenia", COLORS[4]);
@@ -133,9 +134,9 @@ public class ColorHelper {
         countryColorMap.put("Antigua and Barbuda", COLORS[6]);
         countryColorMap.put("Colombia", COLORS[7]);
         countryColorMap.put("Ecuador", COLORS[8]);
-        countryColorMap.put("Taiwan, China", COLORS[9]);
+        countryColorMap.put("Taiwan", COLORS[9]);
         countryColorMap.put("Vanuatu", COLORS[0]);
-        countryColorMap.put("Venezuela, Bolivarian Rep. of", COLORS[1]);
+        countryColorMap.put("Venezuela", COLORS[1]);
         countryColorMap.put("Italy", COLORS[2]);
         countryColorMap.put("Honduras", COLORS[3]);
         countryColorMap.put("Nauru", COLORS[4]);
@@ -166,7 +167,7 @@ public class ColorHelper {
         countryColorMap.put("Dominica", COLORS[9]);
         countryColorMap.put("Benin", COLORS[0]);
         countryColorMap.put("Angola", COLORS[1]);
-        countryColorMap.put("South Sudan, The Republic of", COLORS[2]);
+        countryColorMap.put("South Sudan", COLORS[2]);
         countryColorMap.put("Portugal", COLORS[3]);
         countryColorMap.put("Brunei Darussalam", COLORS[4]);
         countryColorMap.put("New Caledonia", COLORS[5]);
@@ -181,13 +182,13 @@ public class ColorHelper {
         countryColorMap.put("Iraq", COLORS[4]);
         countryColorMap.put("Chile", COLORS[5]);
         countryColorMap.put("Nepal", COLORS[6]);
-        countryColorMap.put("Korea, Dem. People's Rep. of", COLORS[7]);
+        countryColorMap.put("North Korea", COLORS[7]);
         countryColorMap.put("Isle of Man", COLORS[8]);
         countryColorMap.put("Ukraine", COLORS[9]);
         countryColorMap.put("Ghana", COLORS[0]);
         countryColorMap.put("Anguilla", COLORS[1]);
         countryColorMap.put("India", COLORS[2]);
-        countryColorMap.put("Hong Kong, China", COLORS[3]);
+        countryColorMap.put("Hong Kong", COLORS[3]);
         countryColorMap.put("Canada", COLORS[ColorNum.Red.getNum()]);
         countryColorMap.put("Maldives", COLORS[5]);
         countryColorMap.put("Turkey", COLORS[6]);
@@ -212,12 +213,12 @@ public class ColorHelper {
         countryColorMap.put("Equatorial Guinea", COLORS[5]);
         countryColorMap.put("Kiribati", COLORS[6]);
         countryColorMap.put("Costa Rica", COLORS[7]);
-        countryColorMap.put("Congo, Democratic Republic of the", COLORS[8]);
+        countryColorMap.put("Democratic Republic of the Congo", COLORS[8]);
         countryColorMap.put("Nigeria", COLORS[9]);
         countryColorMap.put("Kuwait", COLORS[0]);
         countryColorMap.put("Croatia", COLORS[1]);
         countryColorMap.put("Syrian Arab Republic", COLORS[2]);
-        countryColorMap.put("Macedonia, The former Yugoslav Rep. of", COLORS[3]);
+        countryColorMap.put("North Macedonia", COLORS[3]);
         countryColorMap.put("Uruguay", COLORS[4]);
         countryColorMap.put("Sri Lanka", COLORS[5]);
         countryColorMap.put("Faeroe Islands", COLORS[6]);
@@ -251,8 +252,8 @@ public class ColorHelper {
         countryColorMap.put("Norfolk Island", COLORS[4]);
         countryColorMap.put("New Zealand", COLORS[5]);
         countryColorMap.put("Senegal", COLORS[6]);
-        countryColorMap.put("Moldova, Republic of", COLORS[7]);
-        countryColorMap.put("Iran, Islamic Rep. of", COLORS[8]);
+        countryColorMap.put("Moldova", COLORS[7]);
+        countryColorMap.put("Iran", COLORS[8]);
         countryColorMap.put("Ethiopia", COLORS[9]);
         countryColorMap.put("Egypt", COLORS[0]);
         countryColorMap.put("Sierra Leone", COLORS[1]);
@@ -284,6 +285,7 @@ public class ColorHelper {
         countryColorMap.put("Suriname", COLORS[7]);
         countryColorMap.put("Saint Helena", COLORS[8]);
         countryColorMap.put("Greenland", COLORS[9]);
+        countryColorMap.put("Kosovo", COLORS[9]);
 
     }
 
