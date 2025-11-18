@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nifty xmlns="http://nifty-gui.sourceforge.net/nifty-1.4/nifty.xsd"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <!-- REQUIRED: enables <control name="button"> and more -->
+    
+
+    <screen id="start" controller="com.worldconquest.Gui">
+        <layer id="layer" backgroundColor="#0000" childLayout="vertical">
+
+            <panel id="panel" width="50%" height="50%" align="center" valign="center" childLayout="vertical">
+
+                <control name="label"
+                         id="title"
+                         text="Hello, Nifty GUI!"
+                         font="Interface/Fonts/Default.fnt"
+                         height="50px" />
+
+                <control name="button"
+                         id="btnClick"
+                         label="Click Me!"
+                         height="50px"
+                         align="center"
+                         interactOnClick="onButtonClick()" />
+
+            </panel>
+
+        </layer>
+    </screen>
+</nifty>

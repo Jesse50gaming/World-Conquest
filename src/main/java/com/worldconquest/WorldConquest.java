@@ -25,6 +25,8 @@ public class WorldConquest extends SimpleApplication {
     private int frameNum = 0;
     private int slowUpdateSpeed = 5; //seconds
 
+    private Gui gui;
+
     public static void main(String[] args) {
         WorldConquest app = new WorldConquest();
 
@@ -51,13 +53,15 @@ public class WorldConquest extends SimpleApplication {
         earth.loadCitiesFromGeoNames(50000);
         initLight();
         initCamera();
-
+        gui = new Gui(this);
         
     }
     
     
 
-    private void initCamera() {
+    
+
+ private void initCamera() {
         orbitCamera = new OrbitCamera(cam, inputManager, earth.getEarthSpatial(),this);
         inputManager.setCursorVisible(true);
         orbitCamera.updateCamera();
@@ -84,6 +88,8 @@ public class WorldConquest extends SimpleApplication {
         fill2.setColor(ColorRGBA.White.mult(1f));
         rootNode.addLight(fill2);
     }
+
+    
     
     private void cityRayCast() {
         Vector2f mousePos = inputManager.getCursorPosition();

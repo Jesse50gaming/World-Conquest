@@ -4,6 +4,7 @@ package com.worldconquest;
 import java.util.ArrayList;
 
 import com.jme3.math.ColorRGBA;
+import com.jme3.texture.Image;
 import com.worldconquest.util.ColorHelper;
 
 
@@ -15,6 +16,7 @@ public class Country {
     String name;
     ColorRGBA color;
     ColorHelper colorHelper = new ColorHelper();
+    Image flag;
 
 
     public Country(WorldConquest wc, String name) {
@@ -28,6 +30,8 @@ public class Country {
     private void initCountry() {
         
         color = new ColorRGBA(colorHelper.getCountryColor(name));
+        
+            
         
     }
     
