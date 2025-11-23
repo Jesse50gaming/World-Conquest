@@ -26,14 +26,14 @@ public class WorldConquest extends SimpleApplication {
     private int slowUpdateSpeed = 5; //seconds
 
     private Gui gui;
+    public GameState gameState = GameState.TITLE;
 
     public static void main(String[] args) {
         WorldConquest app = new WorldConquest();
 
         AppSettings settings = new AppSettings(true);
         settings.setFullscreen(true);
-        
-        
+
         DisplayMode mode = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDisplayMode();
         settings.setResolution(mode.getWidth(), mode.getHeight());
 
@@ -44,7 +44,13 @@ public class WorldConquest extends SimpleApplication {
         app.setSettings(settings);
         app.setShowSettings(false);
         app.start();
-        
+
+    }
+    
+
+    private enum GameState {
+        TITLE,
+        GAME,
     }
 
     @Override
@@ -89,9 +95,14 @@ public class WorldConquest extends SimpleApplication {
         rootNode.addLight(fill2);
     }
 
+    public void startGame() {
+        gameState = GameState.GAME;
+    }
+
     
     
     private void cityRayCast() {
+        if (gameState != GameState.GAME) return;
         Vector2f mousePos = inputManager.getCursorPosition();
         CollisionResults results = new CollisionResults();
         Vector3f click3d = cam.getWorldCoordinates(mousePos, 0f).clone();
@@ -156,5 +167,9 @@ public class WorldConquest extends SimpleApplication {
 
     public Earth getEarth() {
         return earth;
+    }
+
+    public Gui getGui() {
+        return gui;
     }
 }

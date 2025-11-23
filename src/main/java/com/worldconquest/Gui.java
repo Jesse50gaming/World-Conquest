@@ -7,6 +7,7 @@ import de.lessvoid.nifty.builder.PanelBuilder;
 import de.lessvoid.nifty.builder.ScreenBuilder;
 import de.lessvoid.nifty.builder.TextBuilder;
 import de.lessvoid.nifty.controls.button.builder.ButtonBuilder;
+import de.lessvoid.nifty.controls.textfield.builder.TextFieldBuilder;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 
@@ -24,7 +25,7 @@ public class Gui implements ScreenController {
         wc.getGuiViewPort().addProcessor(niftyDisplay);
         nifty = niftyDisplay.getNifty();
 
-        // Build the screen programmatically
+       
         nifty.addScreen("start", new ScreenBuilder("start") {
             {
                 controller(Gui.this);
@@ -32,29 +33,48 @@ public class Gui implements ScreenController {
                 layer(new LayerBuilder("layer") {
                     {
                         childLayoutVertical();
-                        backgroundColor("#0000");
+                        backgroundColor("#000000ff");
 
                         panel(new PanelBuilder("panel") {
                             {
-                                width("50%");
-                                height("50%");
+                                width("100%");
+                                height("100%");
                                 alignCenter();
                                 valignCenter();
                                 childLayoutVertical();
 
-                                text(new TextBuilder("title") {
+                                text(new TextBuilder("Spacer") {
                                     {
-                                        text("Hello, Nifty GUI!");
-                                        font("Interface/Fonts/Default.fnt");
-                                        height("50px");
+                                        height("200px");
+                                        alignCenter();
                                     }
                                 });
 
-                                control(new ButtonBuilder("btnClick", "Click Me!") {
+                                text(new TextBuilder("title") {
                                     {
+                                        text("World Conquest");
+                                        font("Interface/Fonts/Default.fnt");
                                         height("50px");
                                         alignCenter();
-                                        interactOnClick("onButtonClick()");
+
+                                    }
+                                });
+                                control(new TextFieldBuilder("Business Name") {
+                                    {
+                                        height("150px");
+                                        width("400px");
+                                        alignCenter();
+                                        color("rgba(70, 70, 70, 1)");
+                                    }
+                                });
+
+                                control(new ButtonBuilder("btnClick", "Start Game") {
+                                    {
+                                        height("250px");
+                                        width("400px");
+                                        alignCenter();
+                                        interactOnClick("startGame()");
+                                        color("rgba(70, 70, 70, 1)");
                                     }
                                 });
                             }
@@ -63,7 +83,52 @@ public class Gui implements ScreenController {
                 });
             }
         }.build(nifty));
+        //Game
+        nifty.addScreen("game", new ScreenBuilder("game") {
+            {
+                controller(Gui.this);
 
+                layer(new LayerBuilder("layer") {
+                    {
+                        childLayoutVertical();
+                       
+
+                        panel(new PanelBuilder("panel") {
+                            {
+                                width("100%");
+                                height("100%");
+                                alignCenter();
+                                valignCenter();
+                                childLayoutHorizontal();
+
+                                text(new TextBuilder("money") {
+                                    {
+                                        alignLeft();
+                                        valign(VAlign.Bottom);
+                                        text("Money");
+                                        font("Interface/Fonts/Default.fnt");
+                                        width("100px");
+                                        
+                                    }
+                                });
+                                text(new TextBuilder("not money") {
+                                    {
+                                        alignLeft();
+                                        valign(VAlign.Bottom);
+                                        text("Not money");
+                                        font("Interface/Fonts/Default.fnt");
+                                        width("100px");
+
+                                    }
+                                });
+
+                                
+                            }
+                        });
+                    }
+                });
+            }
+        }.build(nifty));
         nifty.gotoScreen("start");
     }
 
@@ -80,7 +145,9 @@ public class Gui implements ScreenController {
     public void onEndScreen() {
     }
 
-    public void onButtonClick() {
-        System.out.println("Button clicked!");
+    public void startGame() {
+        
+        wc.startGame();
+        nifty.gotoScreen("game");
     }
 }
