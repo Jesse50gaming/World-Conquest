@@ -13,9 +13,7 @@ import com.jme3.renderer.Camera;
 import com.jme3.scene.Spatial;
 import com.worldconquest.WorldConquest;
 
-/**
- * Orbit-style camera that keeps cursor visible and moves naturally.
- */
+
 public class OrbitCamera implements AnalogListener, ActionListener {
 
     private final Camera cam;

@@ -17,14 +17,16 @@ public class Gui implements ScreenController {
 
     public Gui(WorldConquest wc) {
         this.wc = wc;
-        initGui();
+        
     }
 
-    private void initGui() {
+    public void initGui() {
         NiftyJmeDisplay niftyDisplay = NiftyJmeDisplay.newNiftyJmeDisplay(wc.getAssetManager(), wc.getInputManager(), wc.getAudioRenderer(), wc.getGuiViewPort());
         wc.getGuiViewPort().addProcessor(niftyDisplay);
         nifty = niftyDisplay.getNifty();
-
+        nifty.loadStyleFile("nifty-default-styles.xml");
+        nifty.loadControlFile("nifty-default-controls.xml");
+        //nifty.setDebugOptionPanelColors(true);
        
         nifty.addScreen("start", new ScreenBuilder("start") {
             {
@@ -33,53 +35,215 @@ public class Gui implements ScreenController {
                 layer(new LayerBuilder("layer") {
                     {
                         childLayoutVertical();
-                        backgroundColor("#000000ff");
-
-                        panel(new PanelBuilder("panel") {
+                        
+                        panel( new PanelBuilder() {
                             {
-                                width("100%");
-                                height("100%");
+                                height("5%");
+                            }
+                        });
+
+                        // Title Panel
+                        panel(new PanelBuilder("title_panel") {
+                            {
+                                width("20%");
+                                height("10%");
                                 alignCenter();
                                 valignCenter();
                                 childLayoutVertical();
-
-                                text(new TextBuilder("Spacer") {
-                                    {
-                                        height("200px");
-                                        alignCenter();
-                                    }
-                                });
 
                                 text(new TextBuilder("title") {
                                     {
                                         text("World Conquest");
                                         font("Interface/Fonts/Default.fnt");
-                                        height("50px");
                                         alignCenter();
-
+                                        height("100%");
+                                        width("100%");
                                     }
                                 });
-                                control(new TextFieldBuilder("Business Name") {
-                                    {
-                                        height("150px");
-                                        width("400px");
-                                        alignCenter();
-                                        color("rgba(70, 70, 70, 1)");
-                                    }
-                                });
+                            }
+                        });
 
-                                control(new ButtonBuilder("btnClick", "Start Game") {
+                        // Spacer
+                        panel(new PanelBuilder() {
+                            {
+                                width("20%");
+                                height("5%");
+                            }
+                        });
+
+                        // load game Button Panel
+                        panel(new PanelBuilder("load_game_button_panel") {
+                            {
+                                width("20%");
+                                height("10%");
+                                alignCenter();
+                                valignCenter();
+                                childLayoutVertical();
+                                backgroundColor("#3D3232FF");
+
+                                control(new ButtonBuilder("load_game_button", "Load Game") {
                                     {
-                                        height("250px");
-                                        width("400px");
+                                        height("100%");
+                                        width("100%");
+                                        font("Interface/Fonts/Default.fnt");
                                         alignCenter();
                                         interactOnClick("startGame()");
-                                        color("rgba(70, 70, 70, 1)");
+                                        backgroundColor("#3D3232FF");
+                                    }
+                                });
+                            }
+                        });
+
+                       
+                        // Spacer
+                        panel(new PanelBuilder() {
+                            {
+                                width("20%");
+                                height("5%");
+                            }
+                        });
+
+                        // new game Button Panel
+                        panel(new PanelBuilder("new_game_button_panel") {
+                            {
+                                width("20%");
+                                height("10%");
+                                alignCenter();
+                                valignCenter();
+                                childLayoutVertical();
+                                backgroundColor("#3D3232FF");
+
+                                control(new ButtonBuilder("new_game_button", "New Game") {
+                                    {
+                                        height("100%");
+                                        width("100%");
+                                        font("Interface/Fonts/Default.fnt");
+                                        alignCenter();
+                                        interactOnClick("newGameScreen()");
                                     }
                                 });
                             }
                         });
                     }
+                });
+            }
+        }.build(nifty));
+        // new game creation
+        nifty.addScreen("new_game", new ScreenBuilder("new_game") {
+            {
+                controller(Gui.this);
+
+                layer(new LayerBuilder() {
+                    {
+                        childLayoutVertical();
+                        // new game title
+                        panel(new PanelBuilder("new_game_title") {
+                            {
+                                width("20%");
+                                height("10%");
+                                alignCenter();
+                                valignCenter();
+                                childLayoutVertical();
+
+                                text(new TextBuilder("new_game_title") {
+                                    {
+                                        text("New Game");
+                                        font("Interface/Fonts/Default.fnt");
+                                        height("100%");
+                                        width("100%");
+                                        alignCenter();
+                                    }
+                                });
+                            }
+                        });
+
+                        panel(new PanelBuilder() {
+                            {
+                                height("5%");
+
+                            }
+                        });
+
+                        // back
+                        panel(new PanelBuilder("back_button_panel") {
+                            {
+                                width("20%");
+                                height("10%");
+                                alignCenter();
+                                valignCenter();
+                                childLayoutVertical();
+                                backgroundColor("#3D3232FF");
+
+                                control(new ButtonBuilder("back_button", "Back") {
+                                    {
+                                        height("100%");
+                                        width("100%");
+                                        font("Interface/Fonts/Default.fnt");
+                                        alignCenter();
+                                        interactOnClick("backToStart()");
+                                    }
+                                });
+                            }
+                        });
+
+                        panel(new PanelBuilder() {
+                            {
+                                height("5%");
+
+                            }
+                        });
+
+                        //name input
+                        panel(new PanelBuilder("name_input_panel") {
+                            {
+                                width("20%");
+                                height("10%");
+                                alignCenter();
+                                valignCenter();
+                                childLayoutVertical();
+                                backgroundColor("#3D3232FF");
+
+                                control(new TextFieldBuilder("name_input") {
+                                    {
+                                        height("100%");
+                                        width("100%");
+                                        font("Interface/Fonts/Default.fnt");
+                                        alignCenter();
+                                    }
+                                });
+                            }
+                        });
+
+                        panel(new PanelBuilder() {
+                            {
+                                height("5%");
+                            }
+                        });
+
+                        // start game
+                        panel(new PanelBuilder("start_game_button_panel") {
+                            {
+                                width("20%");
+                                height("10%");
+                                alignCenter();
+                                valignCenter();
+                                childLayoutVertical();
+                                backgroundColor("#3D3232FF");
+
+                                control(new ButtonBuilder("start_game_button", "Start New Game") {
+                                    {
+                                        height("100%");
+                                        width("100%");
+                                        font("Interface/Fonts/Default.fnt");
+                                        alignCenter();
+                                        interactOnClick("startNewGame()");
+                                    }
+                                });
+                            }
+                        });
+
+                    }
+                    
                 });
             }
         }.build(nifty));
@@ -145,9 +309,21 @@ public class Gui implements ScreenController {
     public void onEndScreen() {
     }
 
-    public void startGame() {
-        
-        wc.startGame();
+    public void startNewGame() {
+
+        wc.startNewGame();
         nifty.gotoScreen("game");
+    }
+    
+    public void newGameScreen() {
+        nifty.gotoScreen("new_game");
+    }
+
+    public void backToStart() {
+        nifty.gotoScreen("start");
+    }
+
+    public Nifty getNifty() {
+        return nifty;
     }
 }

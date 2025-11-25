@@ -17,6 +17,8 @@ import com.jme3.scene.Geometry;
 import com.jme3.system.AppSettings;
 import com.worldconquest.controls.OrbitCamera;
 
+import de.lessvoid.nifty.controls.TextField;
+
 public class WorldConquest extends SimpleApplication {
 
     public static int FPS = 60;
@@ -27,6 +29,8 @@ public class WorldConquest extends SimpleApplication {
 
     private Gui gui;
     public GameState gameState = GameState.TITLE;
+
+    private Player player;
 
     public static void main(String[] args) {
         WorldConquest app = new WorldConquest();
@@ -60,6 +64,7 @@ public class WorldConquest extends SimpleApplication {
         initLight();
         initCamera();
         gui = new Gui(this);
+        gui.initGui(); 
         
     }
     
@@ -95,7 +100,16 @@ public class WorldConquest extends SimpleApplication {
         rootNode.addLight(fill2);
     }
 
-    public void startGame() {
+    public void startNewGame() {
+
+        TextField nameField = gui.getNifty().getCurrentScreen().findNiftyControl("name_input", TextField.class);
+        String businessName = nameField.getRealText();
+        if (businessName.isEmpty()) {
+            gui.newGameScreen();
+            return;
+        }
+        player = new Player(businessName, this);
+        
         gameState = GameState.GAME;
     }
 
@@ -172,4 +186,10 @@ public class WorldConquest extends SimpleApplication {
     public Gui getGui() {
         return gui;
     }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+
 }
