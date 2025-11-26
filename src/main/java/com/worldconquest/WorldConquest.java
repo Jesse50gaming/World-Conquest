@@ -162,7 +162,7 @@ public class WorldConquest extends SimpleApplication {
     public void simpleUpdate(float tpf) {
         cityRayCast();
         earth.update();
-
+        gui.update();
         if (frameNum == FPS * slowUpdateSpeed) {
             frameNum = 0;
             slowUpdate();

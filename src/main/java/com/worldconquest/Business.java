@@ -7,7 +7,7 @@ import com.worldconquest.departments.Department;
 public class Business {
 
     WorldConquest wc;
-    int money;
+    int money = 0;
     String name;
     ArrayList<Department> departments;
 
@@ -19,6 +19,10 @@ public class Business {
 
     public void addDepartment(Department department) {
         departments.add(department);
+    }
+
+    public int getMoney() {
+        return money;
     }
 
     
