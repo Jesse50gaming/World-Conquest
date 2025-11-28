@@ -37,6 +37,7 @@ public class Gui implements ScreenController {
     private final String textFieldStyle64 = "text_field_style64";
     private final String textFieldStyle96 = "text_field_style96";
 
+
     
 
     private HashMap<String, RenderFont> fontChange = new HashMap<>();
@@ -106,6 +107,7 @@ public class Gui implements ScreenController {
     }
     
     private void createTextFieldStyle(String id, String fontFile) {
+       // nifty.getRenderEngine().createFont(fontFile);
         // Root
         new StyleBuilder() {
             {
@@ -161,6 +163,7 @@ public class Gui implements ScreenController {
     }
 
     private void createButtonStyle(String id, String fontFile) {
+        //nifty.getRenderEngine().createFont(fontFile);
         // Root button style
         new StyleBuilder() {
             {
@@ -208,13 +211,17 @@ public class Gui implements ScreenController {
 
     public void initGui() {
         NiftyJmeDisplay niftyDisplay = NiftyJmeDisplay.newNiftyJmeDisplay(wc.getAssetManager(), wc.getInputManager(), wc.getAudioRenderer(), wc.getGuiViewPort());
-        wc.getGuiViewPort().addProcessor(niftyDisplay);
+        wc.getGuiViewPort().addProcessor(niftyDisplay); 
         nifty = niftyDisplay.getNifty();
         nifty.loadStyleFile("nifty-default-styles.xml");
         nifty.loadControlFile("nifty-default-controls.xml");
         //nifty.setDebugOptionPanelColors(true);
 
-        //createFont();
+        
+        nifty.getRenderEngine().createFont(zen16);
+        nifty.getRenderEngine().createFont(zen32);
+        nifty.getRenderEngine().createFont(zen64);
+        nifty.getRenderEngine().createFont(zen96);
 
         createStyles();
 
@@ -244,8 +251,9 @@ public class Gui implements ScreenController {
                                 text(new TextBuilder("title") {
                                     {
                                         text("World Conquest");
+                                       // nifty.getRenderEngine().createFont(zen96);
                                         font(zen96);
-
+                                        
                                         alignCenter();
                                         height("100%");
                                         width("100%");
@@ -274,6 +282,7 @@ public class Gui implements ScreenController {
 
                                 control(new ButtonBuilder("load_game_button", "Load Game") {
                                     {
+                                       // nifty.getRenderEngine().createFont(zen64);
                                         style(buttonStyle64);
                                         height("100%");
                                         width("100%");
@@ -307,7 +316,8 @@ public class Gui implements ScreenController {
                                     {
                                         height("100%");
                                         width("100%");
-                                        style(buttonStyle32);
+                                       // nifty.getRenderEngine().createFont(zen64);
+                                        style(buttonStyle64);
                                         alignCenter();
                                         interactOnClick("newGameScreen()");
                                     }
@@ -338,7 +348,8 @@ public class Gui implements ScreenController {
                                 text(new TextBuilder("new_game_title") {
                                     {
                                         text("New Game");
-                                        font(zen16);
+                                       // nifty.getRenderEngine().createFont(zen96);
+                                        font(zen96);
                                         height("100%");
                                         width("100%");
                                         alignCenter();
@@ -367,6 +378,7 @@ public class Gui implements ScreenController {
                                     {
                                         height("100%");
                                         width("100%");
+                                        //nifty.getRenderEngine().createFont(zen64);
                                         style(buttonStyle64);
                                         alignCenter();
                                         interactOnClick("backToStart()");
@@ -393,11 +405,12 @@ public class Gui implements ScreenController {
 
                                 control(new TextFieldBuilder("name_input") {
                                     {
-                                        
+
                                         height("100%");
                                         width("100%");
+                                       // nifty.getRenderEngine().createFont(zen64);
                                         style(textFieldStyle64);
-                                        alignCenter();                       
+                                        alignCenter();
                                     }
                                 });
                             }
@@ -420,6 +433,7 @@ public class Gui implements ScreenController {
 
                                 control(new ButtonBuilder("start_game_button", "Start New Game") {
                                     {
+                                      //  nifty.getRenderEngine().createFont(zen64);
                                         style(buttonStyle64);
                                         height("100%");
                                         width("100%");
@@ -457,6 +471,7 @@ public class Gui implements ScreenController {
                                         alignLeft();
                                         valign(VAlign.Bottom);
                                         text("not set");
+                                       // nifty.getRenderEngine().createFont(zen16);
                                         font(zen16);
                                         width("100px");
 
@@ -475,6 +490,9 @@ public class Gui implements ScreenController {
     }
     
 
+    
+    
+
     @Override
     public void bind(Nifty nifty, Screen screen) {
         this.nifty = nifty;
@@ -488,6 +506,8 @@ public class Gui implements ScreenController {
             return null; 
         });
         */
+
+       
     }
 
     @Override
