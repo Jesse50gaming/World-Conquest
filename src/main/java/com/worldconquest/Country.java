@@ -36,7 +36,7 @@ public class Country {
     }
     
 
-    public void slowUpdate() {
+    public void dailyUpdate() {
         updatePopulation();
         
     }

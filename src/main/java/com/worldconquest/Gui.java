@@ -458,26 +458,72 @@ public class Gui implements ScreenController {
                     {
                         childLayoutVertical();
 
-                        panel(new PanelBuilder("panel") {
+                        panel(new PanelBuilder() {
+                            {
+                                height("90%");
+                            }
+                        });
+
+                        panel(new PanelBuilder("HUD") {
                             {
                                 width("100%");
-                                height("100%");
-                                alignCenter();
-                                valignCenter();
+                                height("10%");
                                 childLayoutHorizontal();
+                                backgroundImage("Interface/Images/HUD.png");
+                                valign(VAlign.Bottom);
+                                alignCenter();
+
+                                panel(new PanelBuilder("name_panel") {
+                                    {
+                                        width("10%");
+                                        height("100%");
+                                        childLayoutVertical();
+                                        valign(VAlign.Bottom);
+                                        alignCenter();
+
+                                        text(new TextBuilder("name") {
+                                            {
+                                                text("not set");
+                                                font(zen32);
+                                                alignLeft();
+                                                valign(VAlign.Center);
+                                             
+                                                width("100%");
+                                                height("50%");
+                                            }
+                                        });
+
+                                        text(new TextBuilder("date") {
+                                            {
+                                                text("not set");
+                                                font(zen32);
+                                                alignLeft();
+                                                
+                                              
+                                                width("100%");
+                                                height("50%");
+                                            }
+                                        });
+
+
+                                    }
+                                    
+                                });
+
+                                
+
 
                                 text(new TextBuilder("money") {
                                     {
-                                        alignLeft();
-                                        valign(VAlign.Bottom);
                                         text("not set");
-                                       
-                                        font(zen16);
-                                        width("100px");
-
+                                        font(zen64);
+                                        alignLeft(); 
+                                        valign(VAlign.Center);
+                                        alignLeft();                  
+                                        width("5%");                 
+                                        height("100%"); 
                                     }
                                 });
-
                             }
                         });
 
@@ -522,22 +568,43 @@ public class Gui implements ScreenController {
 
             //Money
             Element moneyElement = currentScreen.findElementById("money");
-            if (moneyElement == null)  {
-                System.out.println("Money elelement is null");
+            if (moneyElement == null) {
                 return;
             }
             moneyElement.getRenderer(TextRenderer.class).setText(getMoneyString());
 
+            //Date
+            Element dateElement = currentScreen.findElementById("date");
+            if (dateElement == null) {
+                return;
+            }
+            dateElement.getRenderer(TextRenderer.class).setText(getDate());
 
         }
-        
 
+    }
+    
+    public void updateName() {
+        Screen gameScreen = nifty.getScreen("game");
+        Element nameElement = gameScreen.findElementById("name");
+        System.out.println(nameElement);
+        nameElement.getRenderer(TextRenderer.class).setText(getNameString());
+    }
+
+    private String getDate() {
+        return wc.getDate();
+    }
+
+
+    private String getNameString() {
+        return wc.getPlayer().getName();
     }
 
     public void startNewGame() {
 
         wc.startNewGame();
         nifty.gotoScreen("game");
+        updateName();
     }
     
     public void newGameScreen() {

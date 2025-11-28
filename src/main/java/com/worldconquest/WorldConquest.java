@@ -2,7 +2,7 @@ package com.worldconquest;
 
 import java.awt.DisplayMode;
 import java.awt.GraphicsEnvironment;
-
+import java.util.HashMap;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.collision.CollisionResults;
@@ -24,13 +24,15 @@ public class WorldConquest extends SimpleApplication {
     public static int FPS = 60;
     public Earth earth;
     private OrbitCamera orbitCamera;
-    private int frameNum = 0;
-    private int slowUpdateSpeed = 5; //seconds
+    
+    
 
     private Gui gui;
     public GameState gameState = GameState.TITLE;
-
+    private Calender calender;
     private Player player;
+
+   
 
     public static void main(String[] args) {
         WorldConquest app = new WorldConquest();
@@ -48,6 +50,83 @@ public class WorldConquest extends SimpleApplication {
         app.setSettings(settings);
         app.setShowSettings(false);
         app.start();
+
+    }
+
+    private class Calender {
+        int frameNum;
+        int day, month, year;
+        String date = "";
+        int dayLegnth = 5;// in seconds
+        WorldConquest wc;
+        HashMap<Integer, Integer> monthDayHashMap = new HashMap<>();
+        HashMap<Integer, String> monthNameHashMap = new HashMap<>();
+
+        public Calender(int month, int day, int year, WorldConquest wc) {
+            this.month = month;
+            this.day = day;
+            this.year = year;
+            this.wc = wc;
+            initCalender();
+        }
+
+        private void initCalender() {
+            monthDayHashMap.put(1, 31); 
+            monthDayHashMap.put(2, 28); 
+            monthDayHashMap.put(3, 31); 
+            monthDayHashMap.put(4, 30); 
+            monthDayHashMap.put(5, 31); 
+            monthDayHashMap.put(6, 30); 
+            monthDayHashMap.put(7, 31); 
+            monthDayHashMap.put(8, 31); 
+            monthDayHashMap.put(9, 30); 
+            monthDayHashMap.put(10, 31);
+            monthDayHashMap.put(11, 30);
+            monthDayHashMap.put(12, 31);
+
+            monthNameHashMap.put(1, "January");
+            monthNameHashMap.put(2, "February");
+            monthNameHashMap.put(3, "March");
+            monthNameHashMap.put(4, "April");
+            monthNameHashMap.put(5, "May");
+            monthNameHashMap.put(6, "June");
+            monthNameHashMap.put(7, "July");
+            monthNameHashMap.put(8, "August");
+            monthNameHashMap.put(9, "September");
+            monthNameHashMap.put(10, "October");
+            monthNameHashMap.put(11, "November");
+            monthNameHashMap.put(12, "December");
+            
+
+        }
+
+        public void update() {
+            if (frameNum == FPS * dayLegnth) {
+                frameNum = 0;
+                dailyUpdate();
+            }
+            frameNum++;
+        }
+
+        private void dailyUpdate() {
+            wc.dailyUpdate();
+            day++;
+            if (day > monthDayHashMap.get(month)) {
+                day = 1;
+                month++;
+            }
+            if (month > 12) {
+                month = 1;
+                year++;
+            }
+
+        }
+
+        public String getDate() {
+            date = monthNameHashMap.get(month) + " " + day + ", " + year;
+            
+            return date;
+        }
 
     }
     
@@ -109,7 +188,7 @@ public class WorldConquest extends SimpleApplication {
             return;
         }
         player = new Player(businessName, this);
-        
+        calender = new Calender(1, 1, 2025, this);
         gameState = GameState.GAME;
     }
 
@@ -160,18 +239,19 @@ public class WorldConquest extends SimpleApplication {
 
     @Override
     public void simpleUpdate(float tpf) {
-        cityRayCast();
-        earth.update();
-        gui.update();
-        if (frameNum == FPS * slowUpdateSpeed) {
-            frameNum = 0;
-            slowUpdate();
+
+        if (gameState == GameState.GAME) {
+            cityRayCast();
+            earth.update();
+            gui.update();
+            calender.update();
         }
-        frameNum++;
+        
+        
     }
     
-    private void slowUpdate() {
-        earth.slowUpdate();
+    public void dailyUpdate() {
+        earth.dailyUpdate();
     }
 
     @Override
@@ -189,6 +269,10 @@ public class WorldConquest extends SimpleApplication {
 
     public Player getPlayer() {
         return player;
+    }
+
+    public String getDate() {
+        return calender.getDate();
     }
 
 

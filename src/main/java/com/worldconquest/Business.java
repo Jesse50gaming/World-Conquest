@@ -25,6 +25,10 @@ public class Business {
         return money;
     }
 
+    public String getName() {
+        return name;
+    }
+
     
 
 

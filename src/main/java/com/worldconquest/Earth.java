@@ -19,7 +19,7 @@ public class Earth {
 
     public float radius = 500f;
     private Spatial earthSpatial;
-
+    
     
     ArrayList<Country> countries;
 
@@ -34,9 +34,9 @@ public class Earth {
 
     }
 
-    public void slowUpdate() {
+    public void dailyUpdate() {
         for (Country country : countries) {
-            country.slowUpdate();
+            country.dailyUpdate();
         }
     }
 
@@ -179,6 +179,8 @@ public class Earth {
     public float getRadius() {
         return radius;
     }
+
+    
     
     
 }
