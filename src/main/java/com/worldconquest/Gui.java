@@ -3,6 +3,8 @@ package com.worldconquest;
 
 import java.util.HashMap;
 import com.jme3.niftygui.NiftyJmeDisplay;
+import com.jme3.system.AppSettings;
+
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.builder.LayerBuilder;
 import de.lessvoid.nifty.builder.PanelBuilder;
@@ -26,6 +28,10 @@ public class Gui implements ScreenController {
     private final String zen64 = "Interface/Fonts/64/ZenDots64.fnt";
     private final String zen32 = "Interface/Fonts/32/ZenDots32.fnt";
     private final String zen16 = "Interface/Fonts/16/ZenDots16.fnt";
+    private final String zen72 = "Interface/Fonts/72/ZenDots72.fnt";
+    private final String zen48 = "Interface/Fonts/48/ZenDots48.fnt";
+    private final String zen24 = "Interface/Fonts/24/ZenDots24.fnt";
+    private final String zen12 = "Interface/Fonts/12/ZenDots12.fnt";
 
     private final String buttonStyle16 = "button_style16";
     private final String buttonStyle32 = "button_style32";
@@ -37,12 +43,19 @@ public class Gui implements ScreenController {
     private final String textFieldStyle64 = "text_field_style64";
     private final String textFieldStyle96 = "text_field_style96";
 
+    private final String buttonStyle12 = "button_style12";
+    private final String buttonStyle24 = "button_style24";
+    private final String buttonStyle48 = "button_style48";
+    private final String buttonStyle72 = "button_style72";
 
-    
+    private final String textFieldStyle12 = "text_field_style12";
+    private final String textFieldStyle24 = "text_field_style24";
+    private final String textFieldStyle48 = "text_field_style48";
+    private final String textFieldStyle72 = "text_field_style72";
 
-    private HashMap<String, RenderFont> fontChange = new HashMap<>();
-    private HashMap<String, Color> colorChange = new HashMap<>();
-    private HashMap<String, String> screenMap = new HashMap<>();
+
+    private int screenResolution;
+
 
     public Gui(WorldConquest wc) {
         this.wc = wc;
@@ -51,47 +64,7 @@ public class Gui implements ScreenController {
         
     }
     
-    /* 
-    private void changeFont(String name, RenderFont font, String screen) {
-        fontChange.put(name, font);
-        screenMap.put(name, screen);
-    }   
     
-    private void changeColor(String name, Color color, String screen) {
-        colorChange.put(name, color);
-        screenMap.put(name, screen);
-    }
-    
-    private void changeAll() {
-        Set<String> fonts = fontChange.keySet();
-        Set<String> colors = colorChange.keySet();
-        for (String name : fonts) {
-    
-            NiftyControl control = nifty.getScreen(screenMap.get(name)).findNiftyControl(name, NiftyControl.class);
-            if (control == null) continue;
-            if (control.getElement() == null) continue;
-            TextRenderer textRenderer = control.getElement().getRenderer(TextRenderer.class);
-    
-            if (textRenderer == null) continue;
-            RenderFont renderedFont = fontChange.get(name);
-            if (renderedFont == null) continue;
-            textRenderer.setFont(renderedFont);
-    
-        }
-    
-        for (String name : colors) {
-    
-            NiftyControl control = nifty.getScreen(screenMap.get(name)).findNiftyControl(name, NiftyControl.class);
-            if (control == null) continue;
-            if (control.getElement() == null) continue;
-            TextRenderer textRenderer = control.getElement().getRenderer(TextRenderer.class);
-            if (textRenderer == null) continue;
-            textRenderer.setColor(colorChange.get(name));
-    
-        }
-    
-    }
-    */
    
     private void createStyles() {
         if (nifty == null) return;
@@ -104,10 +77,21 @@ public class Gui implements ScreenController {
         createTextFieldStyle(textFieldStyle32, zen32);
         createTextFieldStyle(textFieldStyle64, zen64);
         createTextFieldStyle(textFieldStyle96, zen96);
+
+
+        createButtonStyle(buttonStyle16, zen12);
+        createButtonStyle(buttonStyle32, zen24);
+        createButtonStyle(buttonStyle64, zen48);
+        createButtonStyle(buttonStyle96, zen72);
+
+        createTextFieldStyle(textFieldStyle16, zen12);
+        createTextFieldStyle(textFieldStyle32, zen24);
+        createTextFieldStyle(textFieldStyle64, zen48);
+        createTextFieldStyle(textFieldStyle96, zen72);
     }
     
     private void createTextFieldStyle(String id, String fontFile) {
-       // nifty.getRenderEngine().createFont(fontFile);
+      
         // Root
         new StyleBuilder() {
             {
@@ -209,6 +193,30 @@ public class Gui implements ScreenController {
         }.build(nifty);
     }
 
+    private void loadFonts() {
+        AppSettings settings = wc.getContext().getSettings();
+        screenResolution = settings.getHeight();
+
+        nifty.getRenderEngine().createFont(zen16);
+        nifty.getRenderEngine().createFont(zen32);
+        nifty.getRenderEngine().createFont(zen64);
+        nifty.getRenderEngine().createFont(zen96);
+        nifty.getRenderEngine().createFont(zen12);
+        nifty.getRenderEngine().createFont(zen24);
+        nifty.getRenderEngine().createFont(zen48);
+        nifty.getRenderEngine().createFont(zen72);
+    }
+
+    private String scaleFont(String font1440, String font1080) {
+        if (screenResolution == 1440) {
+            return font1440;
+        } else if(screenResolution == 1080) {
+            return font1080;
+        } else {
+            return font1440;
+        }
+    }
+
     public void initGui() {
         NiftyJmeDisplay niftyDisplay = NiftyJmeDisplay.newNiftyJmeDisplay(wc.getAssetManager(), wc.getInputManager(), wc.getAudioRenderer(), wc.getGuiViewPort());
         wc.getGuiViewPort().addProcessor(niftyDisplay); 
@@ -217,12 +225,7 @@ public class Gui implements ScreenController {
         nifty.loadControlFile("nifty-default-controls.xml");
         //nifty.setDebugOptionPanelColors(true);
 
-        
-        nifty.getRenderEngine().createFont(zen16);
-        nifty.getRenderEngine().createFont(zen32);
-        nifty.getRenderEngine().createFont(zen64);
-        nifty.getRenderEngine().createFont(zen96);
-
+        loadFonts();
         createStyles();
 
         nifty.addScreen("start", new ScreenBuilder("start") {
@@ -252,7 +255,7 @@ public class Gui implements ScreenController {
                                     {
                                         text("World Conquest");
                                        
-                                        font(zen96);
+                                        font(scaleFont(zen96, zen72));
                                         
                                         alignCenter();
                                         height("100%");
@@ -283,7 +286,7 @@ public class Gui implements ScreenController {
                                 control(new ButtonBuilder("load_game_button", "Load Game") {
                                     {
                                        
-                                        style(buttonStyle64);
+                                        style(scaleFont(buttonStyle64, buttonStyle48));
                                         height("100%");
                                         width("100%");
                                         valignCenter();
@@ -317,7 +320,7 @@ public class Gui implements ScreenController {
                                         height("100%");
                                         width("100%");
                                        
-                                        style(buttonStyle64);
+                                        style(scaleFont(buttonStyle64, buttonStyle48));
                                         alignCenter();
                                         interactOnClick("newGameScreen()");
                                     }
@@ -349,7 +352,7 @@ public class Gui implements ScreenController {
                                     {
                                         text("New Game");
                                       
-                                        font(zen96);
+                                        font(scaleFont(zen96, zen72));
                                         height("100%");
                                         width("100%");
                                         alignCenter();
@@ -379,7 +382,7 @@ public class Gui implements ScreenController {
                                         height("100%");
                                         width("100%");
                                        
-                                        style(buttonStyle64);
+                                        style(scaleFont(buttonStyle64, buttonStyle48));
                                         alignCenter();
                                         interactOnClick("backToStart()");
                                     }
@@ -409,7 +412,7 @@ public class Gui implements ScreenController {
                                         height("100%");
                                         width("100%");
                                       
-                                        style(textFieldStyle64);
+                                        style(scaleFont(textFieldStyle64, textFieldStyle48));
                                         alignCenter();
                                     }
                                 });
@@ -434,7 +437,7 @@ public class Gui implements ScreenController {
                                 control(new ButtonBuilder("start_game_button", "Start New Game") {
                                     {
                                       
-                                        style(buttonStyle64);
+                                        style(scaleFont(buttonStyle64, buttonStyle48));
                                         height("100%");
                                         width("100%");
                                         alignCenter();
@@ -484,7 +487,7 @@ public class Gui implements ScreenController {
                                         text(new TextBuilder("name") {
                                             {
                                                 text("not set");
-                                                font(zen32);
+                                                font(scaleFont(zen32, zen24));
                                                 alignLeft();
                                                 valign(VAlign.Center);
                                              
@@ -496,7 +499,7 @@ public class Gui implements ScreenController {
                                         text(new TextBuilder("date") {
                                             {
                                                 text("not set");
-                                                font(zen32);
+                                                font(scaleFont(zen32, zen24));
                                                 alignLeft();
                                                 
                                               
@@ -516,7 +519,7 @@ public class Gui implements ScreenController {
                                 text(new TextBuilder("money") {
                                     {
                                         text("not set");
-                                        font(zen64);
+                                        font(scaleFont(zen32,zen24));
                                         alignLeft(); 
                                         valign(VAlign.Center);
                                         alignLeft();                  
