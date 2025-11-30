@@ -79,15 +79,15 @@ public class Gui implements ScreenController {
         createTextFieldStyle(textFieldStyle96, zen96);
 
 
-        createButtonStyle(buttonStyle16, zen12);
-        createButtonStyle(buttonStyle32, zen24);
-        createButtonStyle(buttonStyle64, zen48);
-        createButtonStyle(buttonStyle96, zen72);
+        createButtonStyle(buttonStyle12, zen12);
+        createButtonStyle(buttonStyle24, zen24);
+        createButtonStyle(buttonStyle48, zen48);
+        createButtonStyle(buttonStyle72, zen72);
 
-        createTextFieldStyle(textFieldStyle16, zen12);
-        createTextFieldStyle(textFieldStyle32, zen24);
-        createTextFieldStyle(textFieldStyle64, zen48);
-        createTextFieldStyle(textFieldStyle96, zen72);
+        createTextFieldStyle(textFieldStyle12, zen12);
+        createTextFieldStyle(textFieldStyle24, zen24);
+        createTextFieldStyle(textFieldStyle48, zen48);
+        createTextFieldStyle(textFieldStyle72, zen72);
     }
     
     private void createTextFieldStyle(String id, String fontFile) {
