@@ -53,6 +53,7 @@ public class Gui implements ScreenController {
     private final String textFieldStyle48 = "text_field_style48";
     private final String textFieldStyle72 = "text_field_style72";
 
+    String chosenDepartment = "Not chosen";
 
     private int screenResolution;
 
@@ -332,6 +333,7 @@ public class Gui implements ScreenController {
             }
         }.build(nifty));
         // new game creation
+        
         nifty.addScreen("new_game", new ScreenBuilder("new_game") {
             {
                 controller(Gui.this);
@@ -418,6 +420,65 @@ public class Gui implements ScreenController {
                                 });
                             }
                         });
+
+                        panel(new PanelBuilder() {
+                            {
+                                height("5%");
+                            }
+                        });
+                        
+                        // department button
+                        panel(new PanelBuilder("department_button_panel") {
+                            {
+                                width("40%");
+                                height("10%");
+                                alignCenter();
+                                valignCenter();
+                                childLayoutHorizontal();
+
+                                control(new ButtonBuilder("basic_ore_mining_button", "Basic Ore Mining") {
+                                    {
+
+                                        style(scaleFont(buttonStyle32, buttonStyle24));
+                                        height("100%");
+                                        width("30%");
+                                        alignCenter();
+                                        interactOnClick("chooseDepartment('Basic Ore Mining')");
+                                    }
+                                });
+                                panel(new PanelBuilder() {
+                                    {
+                                        width("5%");
+                                    }
+                                });
+                                control(new ButtonBuilder("bus_transportation_button", "Bus Transportation") {
+                                    {
+                                        height("100%");
+                                        width("30%");
+                                       
+                                        style(scaleFont(buttonStyle32, buttonStyle24));
+                                        alignCenter();
+                                        interactOnClick("chooseDepartment('Bus Transportation')");
+                                    }
+                                });
+                                panel(new PanelBuilder() {
+                                    {
+                                        width("5%");
+                                    }
+                                });
+                                control(new ButtonBuilder("steel_manufacturing_button", "Steel Manufacturing") {
+                                    {
+                                        height("100%");
+                                        width("30%");
+
+                                        style(scaleFont(buttonStyle32, buttonStyle24));
+                                        alignCenter();
+                                        interactOnClick("chooseDepartment('Steel Manufacturing')");
+                                    }
+                                });
+                            }
+                        });
+
 
                         panel(new PanelBuilder() {
                             {
@@ -608,6 +669,7 @@ public class Gui implements ScreenController {
         wc.startNewGame();
         nifty.gotoScreen("game");
         updateName();
+        
     }
     
     public void newGameScreen() {
@@ -623,8 +685,8 @@ public class Gui implements ScreenController {
     }
 
     private String getMoneyString() {
-        int money = wc.getPlayer().getMoney(); 
-        
+        int money = wc.getPlayer().getMoney();
+
         if (money >= 1_000_000_000) {
             return String.format("%.2fB", money / 1000000000.0);
         } else if (money >= 1_000_000) {
@@ -632,6 +694,11 @@ public class Gui implements ScreenController {
         } else {
             return "$" + String.valueOf(money);
         }
+    }
+    
+    public void chooseDepartment(String departmentName) {
+        chosenDepartment = departmentName;
+        
     }
 
 }

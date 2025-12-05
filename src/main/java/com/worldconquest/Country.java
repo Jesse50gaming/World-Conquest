@@ -23,7 +23,7 @@ public class Country {
         this.wc = wc;
         this.name = name;
         cities = new ArrayList<>();
-        
+        System.out.println(name);
         initCountry();
     }
 

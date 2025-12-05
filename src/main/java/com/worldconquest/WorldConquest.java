@@ -16,6 +16,7 @@ import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Geometry;
 import com.jme3.system.AppSettings;
 import com.worldconquest.controls.OrbitCamera;
+import com.worldconquest.departments.Department;
 
 import de.lessvoid.nifty.controls.TextField;
 
@@ -187,7 +188,15 @@ public class WorldConquest extends SimpleApplication {
             gui.newGameScreen();
             return;
         }
+
+        String chosenDepartment = gui.chosenDepartment;
+        if (chosenDepartment.equals("Not chosen")) {
+            gui.newGameScreen();
+            return;
+        }
+
         player = new Player(businessName, this);
+        //add starting department to player
         calender = new Calender(1, 1, 2025, this);
         gameState = GameState.GAME;
     }

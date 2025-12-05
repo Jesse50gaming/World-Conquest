@@ -92,6 +92,8 @@ public class City {
             return 3;
         } else if (country.equals("Argentina")) {
             return 2;
+        } else if (country.equals("Iran")) {
+            return 2;
         }
         return 1;
     }
