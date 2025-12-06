@@ -181,7 +181,7 @@ public class Gui implements ScreenController {
         new StyleBuilder() {
             {
                 id(id + "#focus");
-                backgroundColor("rgba(22, 24, 24, 1)");
+                backgroundImage("Interface/Images/ButtonBackgroundSelected.png");
             }
         }.build(nifty);
 

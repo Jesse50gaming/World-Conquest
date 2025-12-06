@@ -193,7 +193,11 @@ public class WorldConquest extends SimpleApplication {
         if (chosenDepartment.equals("Not chosen")) {
             gui.newGameScreen();
             return;
+        } else if (chosenDepartment.equals("")) {
+
         }
+        
+        
 
         player = new Player(businessName, this);
         //add starting department to player
