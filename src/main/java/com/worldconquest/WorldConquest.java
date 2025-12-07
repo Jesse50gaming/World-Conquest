@@ -17,6 +17,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.system.AppSettings;
 import com.worldconquest.controls.OrbitCamera;
 import com.worldconquest.departments.Department;
+import com.worldconquest.departments.extraction.BasicOreMining;
 
 import de.lessvoid.nifty.controls.TextField;
 
@@ -190,17 +191,21 @@ public class WorldConquest extends SimpleApplication {
         }
 
         String chosenDepartment = gui.chosenDepartment;
+        Department startingDepartment;
         if (chosenDepartment.equals("Not chosen")) {
             gui.newGameScreen();
             return;
-        } else if (chosenDepartment.equals("")) {
-
+        } else if (chosenDepartment.equals("Basic Ore Mining")) {
+            startingDepartment = new BasicOreMining(this);
+        } else {
+            System.err.println("error no starting department chose");
+            startingDepartment = new BasicOreMining(this);
         }
         
-        
-
         player = new Player(businessName, this);
-        //add starting department to player
+
+        player.addDepartment(startingDepartment);
+        
         calender = new Calender(1, 1, 2025, this);
         gameState = GameState.GAME;
     }

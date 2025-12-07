@@ -19,7 +19,7 @@ public class Earth {
 
     public float radius = 500f;
     private Spatial earthSpatial;
-    
+    long worldPop;
     
     ArrayList<Country> countries;
 
@@ -37,6 +37,10 @@ public class Earth {
     public void dailyUpdate() {
         for (Country country : countries) {
             country.dailyUpdate();
+        }
+
+        for (Country country : countries) {
+            worldPop += country.getPopulation();  
         }
     }
 
@@ -140,6 +144,9 @@ public class Earth {
             City city = new City(wc, lat, lon, population, name, cityCountry);
             countryHashMap.get(countryName).addCity(city);
         }
+
+        
+        
     }
     
     private String countryNameFormat(String countryName) {

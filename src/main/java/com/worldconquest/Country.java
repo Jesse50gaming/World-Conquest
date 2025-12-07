@@ -23,15 +23,12 @@ public class Country {
         this.wc = wc;
         this.name = name;
         cities = new ArrayList<>();
-        System.out.println(name);
         initCountry();
     }
 
     private void initCountry() {
         
-        color = new ColorRGBA(colorHelper.getCountryColor(name));
-        
-            
+        color = new ColorRGBA(colorHelper.getCountryColor(name));  
         
     }
     
@@ -68,8 +65,16 @@ public class Country {
     }
 
     public ColorRGBA getColor() {
-        
+
         return color;
+    }
+    
+    public ArrayList<City> getCities() {
+        return cities;
+    }
+
+    public int getPopulation() {
+        return population;
     }
 
     

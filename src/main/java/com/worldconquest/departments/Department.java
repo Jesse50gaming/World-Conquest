@@ -10,21 +10,25 @@ public abstract class Department {
     public Department(WorldConquest wc, DepartmentType departmentType) {
         this.wc = wc;
         this.departmentType = departmentType;
+        init();
     }
 
     public void update() {
         doAction();
     }
 
-    protected enum DepartmentType {
-        Farming,
-        Extraction,
-        Transportation,
-        Manufacturing,
+    public enum DepartmentType {
+        Farming, Extraction, Transportation, Manufacturing,
 
     }
 
+    protected void init() {
+        createDepartment();
+    }
+
     protected abstract void doAction();
+
+    protected abstract void createDepartment();
 
     
 

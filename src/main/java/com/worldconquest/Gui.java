@@ -11,7 +11,7 @@ import de.lessvoid.nifty.builder.PanelBuilder;
 import de.lessvoid.nifty.builder.ScreenBuilder;
 import de.lessvoid.nifty.builder.StyleBuilder;
 import de.lessvoid.nifty.builder.TextBuilder;
-
+import de.lessvoid.nifty.controls.Button;
 import de.lessvoid.nifty.controls.button.builder.ButtonBuilder;
 import de.lessvoid.nifty.controls.textfield.builder.TextFieldBuilder;
 import de.lessvoid.nifty.elements.Element;
@@ -57,11 +57,13 @@ public class Gui implements ScreenController {
 
     private int screenResolution;
 
+    private HashMap<String, String> startingDepartmentsButtons;
+
 
     public Gui(WorldConquest wc) {
         this.wc = wc;
 
-        
+        startingDepartmentsButtons = new HashMap<>();
         
     }
     
@@ -156,6 +158,13 @@ public class Gui implements ScreenController {
                 childLayoutCenter();
                 backgroundImage("Interface/Images/ButtonBackground.png");
                 visibleToMouse();
+            }
+        }.build(nifty);
+
+        new StyleBuilder() {
+            {
+                id(id + "#selected");
+                backgroundImage("Interface/Images/ButtonBackgroundSelected.png");
             }
         }.build(nifty);
 
@@ -443,7 +452,8 @@ public class Gui implements ScreenController {
                                         height("100%");
                                         width("30%");
                                         alignCenter();
-                                        interactOnClick("chooseDepartment('Basic Ore Mining')");
+                                        startingDepartmentsButtons.put("Basic Ore Mining", "basic_ore_mining_button");
+                                        interactOnClick("chooseDepartment(Basic Ore Mining)");
                                     }
                                 });
                                 panel(new PanelBuilder() {
@@ -455,10 +465,10 @@ public class Gui implements ScreenController {
                                     {
                                         height("100%");
                                         width("30%");
-                                       
+                                        startingDepartmentsButtons.put("Bus Transportation", "bus_transportation_button");
                                         style(scaleFont(buttonStyle32, buttonStyle24));
                                         alignCenter();
-                                        interactOnClick("chooseDepartment('Bus Transportation')");
+                                        interactOnClick("chooseDepartment(Bus Transportation)");
                                     }
                                 });
                                 panel(new PanelBuilder() {
@@ -470,10 +480,10 @@ public class Gui implements ScreenController {
                                     {
                                         height("100%");
                                         width("30%");
-
+                                        startingDepartmentsButtons.put("Steel Manufacturing", "steel_manufacturing_button");
                                         style(scaleFont(buttonStyle32, buttonStyle24));
                                         alignCenter();
-                                        interactOnClick("chooseDepartment('Steel Manufacturing')");
+                                        interactOnClick("chooseDepartment(Steel Manufacturing)");
                                     }
                                 });
                             }
@@ -524,14 +534,14 @@ public class Gui implements ScreenController {
 
                         panel(new PanelBuilder() {
                             {
-                                height("90%");
+                                height("95%");
                             }
                         });
 
                         panel(new PanelBuilder("HUD") {
                             {
                                 width("100%");
-                                height("10%");
+                                height("5%");
                                 childLayoutHorizontal();
                                 backgroundImage("Interface/Images/HUD.png");
                                 valign(VAlign.Bottom);
@@ -651,7 +661,6 @@ public class Gui implements ScreenController {
     public void updateName() {
         Screen gameScreen = nifty.getScreen("game");
         Element nameElement = gameScreen.findElementById("name");
-        System.out.println(nameElement);
         nameElement.getRenderer(TextRenderer.class).setText(getNameString());
     }
 
@@ -698,7 +707,18 @@ public class Gui implements ScreenController {
     
     public void chooseDepartment(String departmentName) {
         chosenDepartment = departmentName;
-        
+        Screen screen = nifty.getScreen("new_game");
+
+        for (String dept : startingDepartmentsButtons.keySet()) {
+            String id = startingDepartmentsButtons.get(dept);
+            Element button = screen.findElementById(id);
+
+            if (dept.equals(departmentName)) {
+                button.setStyle(scaleFont(buttonStyle32, buttonStyle24) + "#selected");
+            } else {
+                button.setStyle(scaleFont(buttonStyle32, buttonStyle24));
+            }
+        }
     }
 
 }
