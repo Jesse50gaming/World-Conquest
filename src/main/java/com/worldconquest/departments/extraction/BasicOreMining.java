@@ -6,6 +6,8 @@ import com.worldconquest.departments.Department.DepartmentType;
 
 public class BasicOreMining extends Department {
 
+    int cost = 10_000_000;
+
     public BasicOreMining(WorldConquest wc) {
         super(wc, DepartmentType.Extraction);
         
@@ -16,8 +18,10 @@ public class BasicOreMining extends Department {
         
     }
 
+
+
     @Override
-    protected void createDepartment() {
+    protected void create() {
         
     }
 

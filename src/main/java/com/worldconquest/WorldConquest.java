@@ -183,14 +183,14 @@ public class WorldConquest extends SimpleApplication {
 
     public void startNewGame() {
 
-        TextField nameField = gui.getNifty().getCurrentScreen().findNiftyControl("name_input", TextField.class);
+        TextField nameField = gui.getNifty().getCurrentScreen().findNiftyControl(Gui.TEXTFIELD_NAME_INPUT, TextField.class);
         String businessName = nameField.getRealText();
         if (businessName.isEmpty()) {
             gui.newGameScreen();
             return;
         }
 
-        String chosenDepartment = gui.chosenDepartment;
+        String chosenDepartment = gui.getChosenDepartment();
         Department startingDepartment;
         if (chosenDepartment.equals("Not chosen")) {
             gui.newGameScreen();
@@ -198,7 +198,7 @@ public class WorldConquest extends SimpleApplication {
         } else if (chosenDepartment.equals("Basic Ore Mining")) {
             startingDepartment = new BasicOreMining(this);
         } else {
-            System.err.println("error no starting department chose");
+            System.err.println("error no starting department chose or " + chosenDepartment + "doesn't exist");
             startingDepartment = new BasicOreMining(this);
         }
         

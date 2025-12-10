@@ -1,6 +1,5 @@
 package com.worldconquest;
 
-
 import java.util.HashMap;
 import com.jme3.niftygui.NiftyJmeDisplay;
 import com.jme3.system.AppSettings;
@@ -11,90 +10,125 @@ import de.lessvoid.nifty.builder.PanelBuilder;
 import de.lessvoid.nifty.builder.ScreenBuilder;
 import de.lessvoid.nifty.builder.StyleBuilder;
 import de.lessvoid.nifty.builder.TextBuilder;
-import de.lessvoid.nifty.controls.Button;
 import de.lessvoid.nifty.controls.button.builder.ButtonBuilder;
 import de.lessvoid.nifty.controls.textfield.builder.TextFieldBuilder;
 import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.elements.render.TextRenderer;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
-import de.lessvoid.nifty.spi.render.RenderFont;
-import de.lessvoid.nifty.tools.Color;
 
 public class Gui implements ScreenController {
     private WorldConquest wc;
     private Nifty nifty;
-    private final String zen96 = "Interface/Fonts/96/ZenDots96.fnt";
-    private final String zen64 = "Interface/Fonts/64/ZenDots64.fnt";
-    private final String zen32 = "Interface/Fonts/32/ZenDots32.fnt";
-    private final String zen16 = "Interface/Fonts/16/ZenDots16.fnt";
-    private final String zen72 = "Interface/Fonts/72/ZenDots72.fnt";
-    private final String zen48 = "Interface/Fonts/48/ZenDots48.fnt";
-    private final String zen24 = "Interface/Fonts/24/ZenDots24.fnt";
-    private final String zen12 = "Interface/Fonts/12/ZenDots12.fnt";
 
-    private final String buttonStyle16 = "button_style16";
-    private final String buttonStyle32 = "button_style32";
-    private final String buttonStyle64 = "button_style64";
-    private final String buttonStyle96 = "button_style96";
+    // ------------------ Font file constants ------------------
+    private static final String ZEN_96 = "Interface/Fonts/96/ZenDots96.fnt";
+    private static final String ZEN_72 = "Interface/Fonts/72/ZenDots72.fnt";
+    private static final String ZEN_64 = "Interface/Fonts/64/ZenDots64.fnt";
+    private static final String ZEN_48 = "Interface/Fonts/48/ZenDots48.fnt";
+    private static final String ZEN_32 = "Interface/Fonts/32/ZenDots32.fnt";
+    private static final String ZEN_24 = "Interface/Fonts/24/ZenDots24.fnt";
+    private static final String ZEN_16 = "Interface/Fonts/16/ZenDots16.fnt";
+    private static final String ZEN_12 = "Interface/Fonts/12/ZenDots12.fnt";
 
-    private final String textFieldStyle16 = "text_field_style16";
-    private final String textFieldStyle32 = "text_field_style32";
-    private final String textFieldStyle64 = "text_field_style64";
-    private final String textFieldStyle96 = "text_field_style96";
+    // ------------------ Style id constants ------------------
+    private static final String BUTTON_STYLE_16 = "button_style16";
+    private static final String BUTTON_STYLE_32 = "button_style32";
+    private static final String BUTTON_STYLE_64 = "button_style64";
+    private static final String BUTTON_STYLE_96 = "button_style96";
 
-    private final String buttonStyle12 = "button_style12";
-    private final String buttonStyle24 = "button_style24";
-    private final String buttonStyle48 = "button_style48";
-    private final String buttonStyle72 = "button_style72";
+    private static final String TEXTFIELD_STYLE_16 = "text_field_style16";
+    private static final String TEXTFIELD_STYLE_32 = "text_field_style32";
+    private static final String TEXTFIELD_STYLE_64 = "text_field_style64";
+    private static final String TEXTFIELD_STYLE_96 = "text_field_style96";
 
-    private final String textFieldStyle12 = "text_field_style12";
-    private final String textFieldStyle24 = "text_field_style24";
-    private final String textFieldStyle48 = "text_field_style48";
-    private final String textFieldStyle72 = "text_field_style72";
+    private static final String BUTTON_STYLE_12 = "button_style12";
+    private static final String BUTTON_STYLE_24 = "button_style24";
+    private static final String BUTTON_STYLE_48 = "button_style48";
+    private static final String BUTTON_STYLE_72 = "button_style72";
 
-    String chosenDepartment = "Not chosen";
+    private static final String TEXTFIELD_STYLE_12 = "text_field_style12";
+    private static final String TEXTFIELD_STYLE_24 = "text_field_style24";
+    private static final String TEXTFIELD_STYLE_48 = "text_field_style48";
+    private static final String TEXTFIELD_STYLE_72 = "text_field_style72";
+
+    // ------------------ Screen / Layer / Panel / Control ID constants
+    // ------------------
+    public static final String SCREEN_START = "start";
+    public static final String SCREEN_NEW_GAME = "new_game";
+    public static final String SCREEN_GAME = "game";
+
+    public static final String LAYER_MAIN = "layer";
+    public static final String LAYER_HUD = "hud";
+    public static final String LAYER_BUSINESS_PANEL = "business panel";
+
+    // Start screen IDs
+    public static final String PANEL_TITLE = "title_panel";
+    public static final String TEXT_TITLE = "title";
+    public static final String PANEL_LOAD_GAME_BUTTON = "load_game_button_panel";
+    public static final String BUTTON_LOAD_GAME = "load_game_button";
+    public static final String PANEL_NEW_GAME_BUTTON = "new_game_button_panel";
+    public static final String BUTTON_NEW_GAME = "new_game_button";
+
+    // New game screen IDs
+    public static final String PANEL_NEW_GAME_TITLE = "new_game_title_panel";
+    public static final String TEXT_NEW_GAME_TITLE = "new_game_title";
+    public static final String PANEL_BACK_BUTTON = "back_button_panel";
+    public static final String BUTTON_BACK = "back_button";
+    public static final String PANEL_NAME_INPUT = "name_input_panel";
+    public static final String TEXTFIELD_NAME_INPUT = "name_input";
+    public static final String PANEL_DEPARTMENT_BUTTONS = "department_button_panel";
+    public static final String BUTTON_BASIC_ORE = "basic_ore_mining_button";
+    public static final String BUTTON_BUS_TRANSPORT = "bus_transportation_button";
+    public static final String BUTTON_STEEL_MANUFACTURING = "steel_manufacturing_button";
+    public static final String PANEL_START_GAME_BUTTON = "start_game_button_panel";
+    public static final String BUTTON_START_GAME = "start_game_button";
+
+    // Game screen / HUD IDs
+    public static final String PANEL_BUSINESS = "BusinessPanel.png"; 
+    public static final String HUD_LAYER_ID = "HUD"; 
+    public static final String PANEL_NAME = "name_panel";
+    public static final String BUTTON_NAME = "name";
+    public static final String TEXT_DATE = "date";
+    public static final String TEXT_MONEY = "money";
+
+
+    //Other
+    private String chosenDepartment = "Not chosen";
 
     private int screenResolution;
 
     private HashMap<String, String> startingDepartmentsButtons;
 
-
     public Gui(WorldConquest wc) {
         this.wc = wc;
-
         startingDepartmentsButtons = new HashMap<>();
-        
     }
-    
-    
-   
+
     private void createStyles() {
         if (nifty == null) return;
-        createButtonStyle(buttonStyle16, zen16);
-        createButtonStyle(buttonStyle32, zen32);
-        createButtonStyle(buttonStyle64, zen64);
-        createButtonStyle(buttonStyle96, zen96);
-        
-        createTextFieldStyle(textFieldStyle16, zen16);
-        createTextFieldStyle(textFieldStyle32, zen32);
-        createTextFieldStyle(textFieldStyle64, zen64);
-        createTextFieldStyle(textFieldStyle96, zen96);
+        createButtonStyle(BUTTON_STYLE_16, ZEN_16);
+        createButtonStyle(BUTTON_STYLE_32, ZEN_32);
+        createButtonStyle(BUTTON_STYLE_64, ZEN_64);
+        createButtonStyle(BUTTON_STYLE_96, ZEN_96);
 
+        createTextFieldStyle(TEXTFIELD_STYLE_16, ZEN_16);
+        createTextFieldStyle(TEXTFIELD_STYLE_32, ZEN_32);
+        createTextFieldStyle(TEXTFIELD_STYLE_64, ZEN_64);
+        createTextFieldStyle(TEXTFIELD_STYLE_96, ZEN_96);
 
-        createButtonStyle(buttonStyle12, zen12);
-        createButtonStyle(buttonStyle24, zen24);
-        createButtonStyle(buttonStyle48, zen48);
-        createButtonStyle(buttonStyle72, zen72);
+        createButtonStyle(BUTTON_STYLE_12, ZEN_12);
+        createButtonStyle(BUTTON_STYLE_24, ZEN_24);
+        createButtonStyle(BUTTON_STYLE_48, ZEN_48);
+        createButtonStyle(BUTTON_STYLE_72, ZEN_72);
 
-        createTextFieldStyle(textFieldStyle12, zen12);
-        createTextFieldStyle(textFieldStyle24, zen24);
-        createTextFieldStyle(textFieldStyle48, zen48);
-        createTextFieldStyle(textFieldStyle72, zen72);
+        createTextFieldStyle(TEXTFIELD_STYLE_12, ZEN_12);
+        createTextFieldStyle(TEXTFIELD_STYLE_24, ZEN_24);
+        createTextFieldStyle(TEXTFIELD_STYLE_48, ZEN_48);
+        createTextFieldStyle(TEXTFIELD_STYLE_72, ZEN_72);
     }
-    
+
     private void createTextFieldStyle(String id, String fontFile) {
-      
         // Root
         new StyleBuilder() {
             {
@@ -126,7 +160,7 @@ public class Gui implements ScreenController {
         new StyleBuilder() {
             {
                 id(id + "#cursor");
-                backgroundColor("#ffffffff"); // white cursor
+                backgroundColor("#ffffffff");
                 width("2px");
             }
         }.build(nifty);
@@ -144,14 +178,12 @@ public class Gui implements ScreenController {
         new StyleBuilder() {
             {
                 id(id + "#selection");
-                backgroundColor("#272727ff"); // semi-transparent
+                backgroundColor("#272727ff");
             }
         }.build(nifty);
     }
 
     private void createButtonStyle(String id, String fontFile) {
-        //nifty.getRenderEngine().createFont(fontFile);
-        // Root button style
         new StyleBuilder() {
             {
                 this.id(id);
@@ -168,7 +200,6 @@ public class Gui implements ScreenController {
             }
         }.build(nifty);
 
-        // Internal panel
         new StyleBuilder() {
             {
                 id(id + "#panel");
@@ -177,7 +208,6 @@ public class Gui implements ScreenController {
             }
         }.build(nifty);
 
-        // Text element
         new StyleBuilder() {
             {
                 id(id + "#text");
@@ -186,7 +216,6 @@ public class Gui implements ScreenController {
             }
         }.build(nifty);
 
-        // Focus state
         new StyleBuilder() {
             {
                 id(id + "#focus");
@@ -194,7 +223,6 @@ public class Gui implements ScreenController {
             }
         }.build(nifty);
 
-        // Disabled state
         new StyleBuilder() {
             {
                 id(id + "#disabled");
@@ -207,20 +235,20 @@ public class Gui implements ScreenController {
         AppSettings settings = wc.getContext().getSettings();
         screenResolution = settings.getHeight();
 
-        nifty.getRenderEngine().createFont(zen16);
-        nifty.getRenderEngine().createFont(zen32);
-        nifty.getRenderEngine().createFont(zen64);
-        nifty.getRenderEngine().createFont(zen96);
-        nifty.getRenderEngine().createFont(zen12);
-        nifty.getRenderEngine().createFont(zen24);
-        nifty.getRenderEngine().createFont(zen48);
-        nifty.getRenderEngine().createFont(zen72);
+        nifty.getRenderEngine().createFont(ZEN_16);
+        nifty.getRenderEngine().createFont(ZEN_32);
+        nifty.getRenderEngine().createFont(ZEN_64);
+        nifty.getRenderEngine().createFont(ZEN_96);
+        nifty.getRenderEngine().createFont(ZEN_12);
+        nifty.getRenderEngine().createFont(ZEN_24);
+        nifty.getRenderEngine().createFont(ZEN_48);
+        nifty.getRenderEngine().createFont(ZEN_72);
     }
 
     private String scaleFont(String font1440, String font1080) {
         if (screenResolution == 1440) {
             return font1440;
-        } else if(screenResolution == 1080) {
+        } else if (screenResolution == 1080) {
             return font1080;
         } else {
             return font1440;
@@ -229,20 +257,20 @@ public class Gui implements ScreenController {
 
     public void initGui() {
         NiftyJmeDisplay niftyDisplay = NiftyJmeDisplay.newNiftyJmeDisplay(wc.getAssetManager(), wc.getInputManager(), wc.getAudioRenderer(), wc.getGuiViewPort());
-        wc.getGuiViewPort().addProcessor(niftyDisplay); 
+        wc.getGuiViewPort().addProcessor(niftyDisplay);
         nifty = niftyDisplay.getNifty();
         nifty.loadStyleFile("nifty-default-styles.xml");
         nifty.loadControlFile("nifty-default-controls.xml");
-        //nifty.setDebugOptionPanelColors(true);
 
         loadFonts();
         createStyles();
 
-        nifty.addScreen("start", new ScreenBuilder("start") {
+        // ---------------- Start Screen ----------------
+        nifty.addScreen(SCREEN_START, new ScreenBuilder(SCREEN_START) {
             {
                 controller(Gui.this);
 
-                layer(new LayerBuilder("layer") {
+                layer(new LayerBuilder(LAYER_MAIN) {
                     {
                         childLayoutVertical();
 
@@ -253,7 +281,7 @@ public class Gui implements ScreenController {
                         });
 
                         // Title Panel
-                        panel(new PanelBuilder("title_panel") {
+                        panel(new PanelBuilder(PANEL_TITLE) {
                             {
                                 width("20%");
                                 height("10%");
@@ -261,12 +289,10 @@ public class Gui implements ScreenController {
                                 valignCenter();
                                 childLayoutVertical();
 
-                                text(new TextBuilder("title") {
+                                text(new TextBuilder(TEXT_TITLE) {
                                     {
                                         text("World Conquest");
-                                       
-                                        font(scaleFont(zen96, zen72));
-                                        
+                                        font(scaleFont(ZEN_96, ZEN_72));
                                         alignCenter();
                                         height("100%");
                                         width("100%");
@@ -283,8 +309,8 @@ public class Gui implements ScreenController {
                             }
                         });
 
-                        // load game Button Panel
-                        panel(new PanelBuilder("load_game_button_panel") {
+                        // Load Game Button Panel
+                        panel(new PanelBuilder(PANEL_LOAD_GAME_BUTTON) {
                             {
                                 width("20%");
                                 height("10%");
@@ -293,16 +319,14 @@ public class Gui implements ScreenController {
                                 childLayoutVertical();
                                 backgroundColor("#3D3232FF");
 
-                                control(new ButtonBuilder("load_game_button", "Load Game") {
+                                control(new ButtonBuilder(BUTTON_LOAD_GAME, "Load Game") {
                                     {
-                                       
-                                        style(scaleFont(buttonStyle64, buttonStyle48));
+                                        style(scaleFont(BUTTON_STYLE_64, BUTTON_STYLE_48));
                                         height("100%");
                                         width("100%");
                                         valignCenter();
                                         alignCenter();
                                         interactOnClick("startGame()");
-
                                     }
                                 });
                             }
@@ -316,8 +340,8 @@ public class Gui implements ScreenController {
                             }
                         });
 
-                        // new game Button Panel
-                        panel(new PanelBuilder("new_game_button_panel") {
+                        // New Game Button Panel
+                        panel(new PanelBuilder(PANEL_NEW_GAME_BUTTON) {
                             {
                                 width("20%");
                                 height("10%");
@@ -325,12 +349,11 @@ public class Gui implements ScreenController {
                                 valignCenter();
                                 childLayoutVertical();
 
-                                control(new ButtonBuilder("new_game_button", "New Game") {
+                                control(new ButtonBuilder(BUTTON_NEW_GAME, "New Game") {
                                     {
                                         height("100%");
                                         width("100%");
-                                       
-                                        style(scaleFont(buttonStyle64, buttonStyle48));
+                                        style(scaleFont(BUTTON_STYLE_64, BUTTON_STYLE_48));
                                         alignCenter();
                                         interactOnClick("newGameScreen()");
                                     }
@@ -341,17 +364,18 @@ public class Gui implements ScreenController {
                 });
             }
         }.build(nifty));
-        // new game creation
-        
-        nifty.addScreen("new_game", new ScreenBuilder("new_game") {
+
+        // ---------------- New Game Screen ----------------
+        nifty.addScreen(SCREEN_NEW_GAME, new ScreenBuilder(SCREEN_NEW_GAME) {
             {
                 controller(Gui.this);
 
                 layer(new LayerBuilder() {
                     {
                         childLayoutVertical();
+
                         // new game title
-                        panel(new PanelBuilder("new_game_title_panel") {
+                        panel(new PanelBuilder(PANEL_NEW_GAME_TITLE) {
                             {
                                 width("20%");
                                 height("10%");
@@ -359,11 +383,10 @@ public class Gui implements ScreenController {
                                 valignCenter();
                                 childLayoutVertical();
 
-                                text(new TextBuilder("new_game_title") {
+                                text(new TextBuilder(TEXT_NEW_GAME_TITLE) {
                                     {
                                         text("New Game");
-                                      
-                                        font(scaleFont(zen96, zen72));
+                                        font(scaleFont(ZEN_96, ZEN_72));
                                         height("100%");
                                         width("100%");
                                         alignCenter();
@@ -375,12 +398,11 @@ public class Gui implements ScreenController {
                         panel(new PanelBuilder() {
                             {
                                 height("5%");
-
                             }
                         });
 
                         // back
-                        panel(new PanelBuilder("back_button_panel") {
+                        panel(new PanelBuilder(PANEL_BACK_BUTTON) {
                             {
                                 width("20%");
                                 height("10%");
@@ -388,12 +410,11 @@ public class Gui implements ScreenController {
                                 valignCenter();
                                 childLayoutVertical();
 
-                                control(new ButtonBuilder("back_button", "Back") {
+                                control(new ButtonBuilder(BUTTON_BACK, "Back") {
                                     {
                                         height("100%");
                                         width("100%");
-                                       
-                                        style(scaleFont(buttonStyle64, buttonStyle48));
+                                        style(scaleFont(BUTTON_STYLE_64, BUTTON_STYLE_48));
                                         alignCenter();
                                         interactOnClick("backToStart()");
                                     }
@@ -404,12 +425,11 @@ public class Gui implements ScreenController {
                         panel(new PanelBuilder() {
                             {
                                 height("5%");
-
                             }
                         });
 
-                        //name input
-                        panel(new PanelBuilder("name_input_panel") {
+                        // name input
+                        panel(new PanelBuilder(PANEL_NAME_INPUT) {
                             {
                                 width("20%");
                                 height("10%");
@@ -417,13 +437,11 @@ public class Gui implements ScreenController {
                                 valignCenter();
                                 childLayoutVertical();
 
-                                control(new TextFieldBuilder("name_input") {
+                                control(new TextFieldBuilder(TEXTFIELD_NAME_INPUT) {
                                     {
-
                                         height("100%");
                                         width("100%");
-                                      
-                                        style(scaleFont(textFieldStyle64, textFieldStyle48));
+                                        style(scaleFont(TEXTFIELD_STYLE_64, TEXTFIELD_STYLE_48));
                                         alignCenter();
                                     }
                                 });
@@ -435,9 +453,9 @@ public class Gui implements ScreenController {
                                 height("5%");
                             }
                         });
-                        
+
                         // department button
-                        panel(new PanelBuilder("department_button_panel") {
+                        panel(new PanelBuilder(PANEL_DEPARTMENT_BUTTONS) {
                             {
                                 width("40%");
                                 height("10%");
@@ -445,50 +463,52 @@ public class Gui implements ScreenController {
                                 valignCenter();
                                 childLayoutHorizontal();
 
-                                control(new ButtonBuilder("basic_ore_mining_button", "Basic Ore Mining") {
+                                control(new ButtonBuilder(BUTTON_BASIC_ORE, "Basic Ore Mining") {
                                     {
-
-                                        style(scaleFont(buttonStyle32, buttonStyle24));
+                                        style(scaleFont(BUTTON_STYLE_32, BUTTON_STYLE_24));
                                         height("100%");
                                         width("30%");
                                         alignCenter();
-                                        startingDepartmentsButtons.put("Basic Ore Mining", "basic_ore_mining_button");
+                                        startingDepartmentsButtons.put("Basic Ore Mining", BUTTON_BASIC_ORE);
                                         interactOnClick("chooseDepartment(Basic Ore Mining)");
                                     }
                                 });
+
                                 panel(new PanelBuilder() {
                                     {
                                         width("5%");
                                     }
                                 });
-                                control(new ButtonBuilder("bus_transportation_button", "Bus Transportation") {
+
+                                control(new ButtonBuilder(BUTTON_BUS_TRANSPORT, "Bus Transportation") {
                                     {
                                         height("100%");
                                         width("30%");
-                                        startingDepartmentsButtons.put("Bus Transportation", "bus_transportation_button");
-                                        style(scaleFont(buttonStyle32, buttonStyle24));
+                                        startingDepartmentsButtons.put("Bus Transportation", BUTTON_BUS_TRANSPORT);
+                                        style(scaleFont(BUTTON_STYLE_32, BUTTON_STYLE_24));
                                         alignCenter();
                                         interactOnClick("chooseDepartment(Bus Transportation)");
                                     }
                                 });
+
                                 panel(new PanelBuilder() {
                                     {
                                         width("5%");
                                     }
                                 });
-                                control(new ButtonBuilder("steel_manufacturing_button", "Steel Manufacturing") {
+
+                                control(new ButtonBuilder(BUTTON_STEEL_MANUFACTURING, "Steel Manufacturing") {
                                     {
                                         height("100%");
                                         width("30%");
-                                        startingDepartmentsButtons.put("Steel Manufacturing", "steel_manufacturing_button");
-                                        style(scaleFont(buttonStyle32, buttonStyle24));
+                                        startingDepartmentsButtons.put("Steel Manufacturing", BUTTON_STEEL_MANUFACTURING);
+                                        style(scaleFont(BUTTON_STYLE_32, BUTTON_STYLE_24));
                                         alignCenter();
                                         interactOnClick("chooseDepartment(Steel Manufacturing)");
                                     }
                                 });
                             }
                         });
-
 
                         panel(new PanelBuilder() {
                             {
@@ -497,7 +517,7 @@ public class Gui implements ScreenController {
                         });
 
                         // start game
-                        panel(new PanelBuilder("start_game_button_panel") {
+                        panel(new PanelBuilder(PANEL_START_GAME_BUTTON) {
                             {
                                 width("20%");
                                 height("10%");
@@ -505,10 +525,9 @@ public class Gui implements ScreenController {
                                 valignCenter();
                                 childLayoutVertical();
 
-                                control(new ButtonBuilder("start_game_button", "Start New Game") {
+                                control(new ButtonBuilder(BUTTON_START_GAME, "Start New Game") {
                                     {
-                                      
-                                        style(scaleFont(buttonStyle64, buttonStyle48));
+                                        style(scaleFont(BUTTON_STYLE_64, BUTTON_STYLE_48));
                                         height("100%");
                                         width("100%");
                                         alignCenter();
@@ -517,18 +536,48 @@ public class Gui implements ScreenController {
                                 });
                             }
                         });
-
                     }
-
                 });
             }
         }.build(nifty));
-        //Game
-        nifty.addScreen("game", new ScreenBuilder("game") {
+
+        // ---------------- Game Screen ----------------
+        nifty.addScreen(SCREEN_GAME, new ScreenBuilder(SCREEN_GAME) {
             {
                 controller(Gui.this);
 
-                layer(new LayerBuilder("layer") {
+                layer(new LayerBuilder(LAYER_BUSINESS_PANEL) {
+                    {
+                        childLayoutVertical();
+                        visible(false);
+                        valignCenter();
+                        alignCenter();
+
+                        panel(new PanelBuilder() {
+                            {
+                                height("20%");
+                            }
+                        });
+
+                        panel(new PanelBuilder() {
+                            {
+                                backgroundImage("Interface/Images/BusinessPanel.png");
+                                height("60%");
+                                width("50%");
+                                alignCenter();
+                                valignCenter();
+                            }
+                        });
+
+                        panel(new PanelBuilder() {
+                            {
+                                height("20%");
+                            }
+                        });
+                    }
+                });
+
+                layer(new LayerBuilder(LAYER_HUD) {
                     {
                         childLayoutVertical();
 
@@ -538,7 +587,7 @@ public class Gui implements ScreenController {
                             }
                         });
 
-                        panel(new PanelBuilder("HUD") {
+                        panel(new PanelBuilder(HUD_LAYER_ID) {
                             {
                                 width("100%");
                                 height("5%");
@@ -547,7 +596,7 @@ public class Gui implements ScreenController {
                                 valign(VAlign.Bottom);
                                 alignCenter();
 
-                                panel(new PanelBuilder("name_panel") {
+                                panel(new PanelBuilder(PANEL_NAME) {
                                     {
                                         width("10%");
                                         height("100%");
@@ -555,63 +604,49 @@ public class Gui implements ScreenController {
                                         valign(VAlign.Bottom);
                                         alignCenter();
 
-                                        text(new TextBuilder("name") {
+                                        control(new ButtonBuilder(BUTTON_NAME, "not Chosen") {
                                             {
                                                 text("not set");
-                                                font(scaleFont(zen32, zen24));
-                                                alignLeft();
+                                                style(scaleFont(BUTTON_STYLE_32, BUTTON_STYLE_24)); 
+                                                alignCenter();
                                                 valign(VAlign.Center);
-                                             
-                                                width("100%");
+                                                width("80%");
                                                 height("50%");
+                                                interactOnClick("toggleBusinessPanel()");
                                             }
                                         });
 
-                                        text(new TextBuilder("date") {
+                                        text(new TextBuilder(TEXT_DATE) {
                                             {
                                                 text("not set");
-                                                font(scaleFont(zen32, zen24));
+                                                font(scaleFont(ZEN_32, ZEN_24));
                                                 alignLeft();
-                                                
-                                              
                                                 width("100%");
                                                 height("50%");
                                             }
                                         });
-
-
                                     }
-                                    
                                 });
 
-                                
-
-
-                                text(new TextBuilder("money") {
+                                text(new TextBuilder(TEXT_MONEY) {
                                     {
                                         text("not set");
-                                        font(scaleFont(zen32,zen24));
-                                        alignLeft(); 
+                                        font(scaleFont(ZEN_32, ZEN_24));
+                                        alignLeft();
                                         valign(VAlign.Center);
-                                        alignLeft();                  
-                                        width("5%");                 
-                                        height("100%"); 
+                                        width("5%");
+                                        height("100%");
                                     }
                                 });
                             }
                         });
-
                     }
                 });
             }
         }.build(nifty));
-        nifty.gotoScreen("start");
 
+        nifty.gotoScreen(SCREEN_START);
     }
-    
-
-    
-    
 
     @Override
     public void bind(Nifty nifty, Screen screen) {
@@ -620,73 +655,65 @@ public class Gui implements ScreenController {
 
     @Override
     public void onStartScreen() {
-        /*
-        wc.enqueue(() -> {
-            changeAll();
-            return null; 
-        });
-        */
-
-       
+        // no-op
     }
 
     @Override
     public void onEndScreen() {
+        // no-op
     }
 
     public void update() {
         Screen currentScreen = nifty.getCurrentScreen();
         String screenID = currentScreen.getScreenId();
 
-        if (screenID.equals("game")) {
-
-            //Money
-            Element moneyElement = currentScreen.findElementById("money");
+        if (screenID.equals(SCREEN_GAME)) {
+            // Money
+            Element moneyElement = currentScreen.findElementById(TEXT_MONEY);
             if (moneyElement == null) {
                 return;
             }
             moneyElement.getRenderer(TextRenderer.class).setText(getMoneyString());
 
-            //Date
-            Element dateElement = currentScreen.findElementById("date");
+            // Date
+            Element dateElement = currentScreen.findElementById(TEXT_DATE);
             if (dateElement == null) {
                 return;
             }
             dateElement.getRenderer(TextRenderer.class).setText(getDate());
-
         }
-
     }
-    
+
     public void updateName() {
-        Screen gameScreen = nifty.getScreen("game");
-        Element nameElement = gameScreen.findElementById("name");
-        nameElement.getRenderer(TextRenderer.class).setText(getNameString());
+        Screen gameScreen = nifty.getScreen(SCREEN_GAME);
+        Element nameElement = gameScreen.findElementById(BUTTON_NAME + "#text");
+        if (nameElement != null) {
+            nameElement.getRenderer(TextRenderer.class).setText(getNameString());
+        } else {
+            System.out.println("name button is not found");
+        }
     }
 
     private String getDate() {
         return wc.getDate();
     }
 
-
     private String getNameString() {
         return wc.getPlayer().getName();
     }
 
     public void startNewGame() {
-
         wc.startNewGame();
-        nifty.gotoScreen("game");
+        nifty.gotoScreen(SCREEN_GAME);
         updateName();
-        
     }
-    
+
     public void newGameScreen() {
-        nifty.gotoScreen("new_game");
+        nifty.gotoScreen(SCREEN_NEW_GAME);
     }
 
     public void backToStart() {
-        nifty.gotoScreen("start");
+        nifty.gotoScreen(SCREEN_START);
     }
 
     public Nifty getNifty() {
@@ -704,21 +731,37 @@ public class Gui implements ScreenController {
             return "$" + String.valueOf(money);
         }
     }
-    
+
     public void chooseDepartment(String departmentName) {
         chosenDepartment = departmentName;
-        Screen screen = nifty.getScreen("new_game");
+        Screen screen = nifty.getScreen(SCREEN_NEW_GAME);
 
         for (String dept : startingDepartmentsButtons.keySet()) {
             String id = startingDepartmentsButtons.get(dept);
             Element button = screen.findElementById(id);
 
+            if (button == null) continue;
+
             if (dept.equals(departmentName)) {
-                button.setStyle(scaleFont(buttonStyle32, buttonStyle24) + "#selected");
+                button.setStyle(scaleFont(BUTTON_STYLE_32, BUTTON_STYLE_24) + "#selected");
             } else {
-                button.setStyle(scaleFont(buttonStyle32, buttonStyle24));
+                button.setStyle(scaleFont(BUTTON_STYLE_32, BUTTON_STYLE_24));
             }
         }
     }
 
+    public void toggleBusinessPanel() {
+        Screen screen = nifty.getScreen(SCREEN_GAME);
+        Element bPanel = screen.findElementById(LAYER_BUSINESS_PANEL);
+        
+        if (bPanel != null) {
+            bPanel.setVisible(!bPanel.isVisible());
+        }
+    }
+
+    public String getChosenDepartment() {
+        return chosenDepartment;
+    }
+
 }
+
