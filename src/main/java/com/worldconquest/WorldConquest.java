@@ -293,7 +293,7 @@ public class WorldConquest extends SimpleApplication {
 
     @Override
     public void simpleUpdate(float tpf) {
-       
+        playerInput.update();
         if (gameState == GameState.GAME) {
             cityRayCast();
             earth.update();

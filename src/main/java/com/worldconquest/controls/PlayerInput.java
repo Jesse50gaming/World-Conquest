@@ -1,6 +1,9 @@
 package com.worldconquest.controls;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
+import java.util.Set;
 
 import com.jme3.collision.CollisionResults;
 import com.jme3.font.BitmapText;
@@ -30,13 +33,14 @@ public class PlayerInput implements ActionListener, AnalogListener {
     private static final String LEFT_CLICK = "LEFT_CLICK";
     private static final String E_PRESSED = "E_PRESSED";
     private MouseStates mousestate = MouseStates.NORMAL;
-    private ArrayList<City> slectedCities;
+    Deque<City> selectedCities = new ArrayDeque<>();
+    private int selectedCitiesGoal;
 
     public PlayerInput(InputManager input, WorldConquest wc) {
         this.input = input;
         this.wc = wc;
         gui = wc.getGui();
-        slectedCities = new ArrayList<>();
+        selectedCities = new ArrayDeque<>();
         registerInputs();
     }
 
@@ -58,12 +62,23 @@ public class PlayerInput implements ActionListener, AnalogListener {
             }
 
         }
-        
+
         if (name.equals(LEFT_CLICK)) {
             if (mousestate == MouseStates.CITYSELECTION) {
+                City city = wc.getClosestCity();
+                if (city != null) {
+                    selectedCities.addFirst(city);
+                    if (selectedCities.size() > selectedCitiesGoal) {
+                        selectedCities.removeLast();
+                    }
+                }
                 
             }
         }
+    }
+    
+    public void update() {
+
     }
 
     @Override
@@ -73,6 +88,22 @@ public class PlayerInput implements ActionListener, AnalogListener {
 
     public enum MouseStates {
         NORMAL, CITYSELECTION
+    }
+
+    public void startCitySelection(int cityNum) {
+        selectedCities.clear();
+        selectedCitiesGoal = cityNum;
+        mousestate = MouseStates.CITYSELECTION;
+    }
+
+    public boolean selectedCitiesFull() {
+        return selectedCities.size() == selectedCitiesGoal;
+    }
+
+    public void endCitySelection() {
+        selectedCities.clear();
+        selectedCitiesGoal = 0;
+        mousestate = MouseStates.NORMAL;
     }
     
 

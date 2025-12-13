@@ -29,6 +29,17 @@ public class Business {
         return name;
     }
 
+    public String getMoneyString() {
+
+        if (money >= 1_000_000_000) {
+            return String.format("%.2fB", money / 1000000000.0);
+        } else if (money >= 1_000_000) {
+            return String.format("%.2fM", money / 1000000.0);
+        } else {
+            return "$" + String.valueOf(money);
+        }
+    }
+
     
 
 

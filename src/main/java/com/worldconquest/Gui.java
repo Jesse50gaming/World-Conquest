@@ -1,6 +1,9 @@
 package com.worldconquest;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.function.Supplier;
+
 import com.jme3.niftygui.NiftyJmeDisplay;
 import com.jme3.system.AppSettings;
 
@@ -60,7 +63,7 @@ public class Gui implements ScreenController {
 
     public static final String LAYER_MAIN = "layer";
     public static final String LAYER_HUD = "hud";
-    public static final String LAYER_BUSINESS_PANEL = "business panel";
+    
 
     // Start screen IDs
     public static final String PANEL_TITLE = "title_panel";
@@ -85,12 +88,21 @@ public class Gui implements ScreenController {
     public static final String BUTTON_START_GAME = "start_game_button";
 
     // Game screen / HUD IDs
-    public static final String PANEL_BUSINESS = "BusinessPanel.png"; 
+    
     public static final String HUD_LAYER_ID = "HUD"; 
     public static final String PANEL_NAME = "name_panel";
     public static final String BUTTON_NAME = "name";
     public static final String TEXT_DATE = "date";
     public static final String TEXT_MONEY = "money";
+
+    //Business Panel
+    public static final String LAYER_BUSINESS_PANEL = "BUSINESS_PANEL_LAYER";
+    public static final String LEFT_PANEL = "LEFT_PANEL";
+    public static final String RIGHT_PANEL = "RIGHT_PANEL";
+    public static final String CENTER_PANEL = "CENTER_PANEL";
+    public static final String BUSINESS_PANEL_IMAGE = "Interface/Images/BusinessPanel.png";
+    public static final String BUSINESS_PANEL = "BUSINESS_PANEL";
+    public static final String BUSINESS_NAME_TEXT = "BUSINESS_NAME";
 
     public enum ScreenState {
         START_GAME,
@@ -105,12 +117,20 @@ public class Gui implements ScreenController {
     private ScreenState screenState = ScreenState.START_GAME;
     private int screenResolution;
 
+    private HashMap<String, String> businessNameTexts;
+    private HashMap<String, Supplier<String>> changingTextSupplier;
+    private HashMap<String, String> changingTextScreen;
+
     private HashMap<String, String> startingDepartmentsButtons;
 
     public Gui(WorldConquest wc) {
         this.wc = wc;
         startingDepartmentsButtons = new HashMap<>();
         screenStateMap = new HashMap<>();
+        businessNameTexts = new HashMap<>();
+
+        changingTextScreen = new HashMap<>();
+        changingTextSupplier = new HashMap<>();
         initScreenStateMap();
     }
 
@@ -579,13 +599,61 @@ public class Gui implements ScreenController {
                             }
                         });
 
-                        panel(new PanelBuilder() {
+                        panel(new PanelBuilder(BUSINESS_PANEL) {
                             {
-                                backgroundImage("Interface/Images/BusinessPanel.png");
+                                backgroundImage(BUSINESS_PANEL_IMAGE);
                                 height("60%");
                                 width("50%");
                                 alignCenter();
                                 valignCenter();
+                                childLayoutHorizontal();
+
+                                panel(new PanelBuilder(LEFT_PANEL) {
+                                    {
+                                        height("100%");
+                                        width("33%");
+                                        childLayoutVertical();
+                                        valignCenter();
+                                        
+                                    }
+                                });
+                                panel(new PanelBuilder(CENTER_PANEL) {
+                                    {
+                                        height("100%");
+                                        width("33%");
+                                        childLayoutVertical();
+                                        valignCenter();
+
+                                        panel(new PanelBuilder() {
+                                            {
+                                                height("5%");
+                                            }
+                                        });
+
+                                        text(new TextBuilder(BUSINESS_NAME_TEXT){
+                                            {
+                                                text("not Selected");
+                                                changingText(BUSINESS_NAME_TEXT, SCREEN_GAME, () -> wc.getPlayer().getName());
+                                                font(scaleFont(ZEN_32,ZEN_24));
+                                                width("100%");
+                                                height("10%");
+                                                alignCenter();
+                                            }
+                                        });
+
+
+                                    }
+                                });
+                                panel(new PanelBuilder(RIGHT_PANEL) {
+                                    {
+                                        height("100%");
+                                        width("33%");
+                                        childLayoutVertical();
+                                        valignCenter();
+
+                                    }
+                                });
+
                             }
                         });
 
@@ -629,6 +697,7 @@ public class Gui implements ScreenController {
                                                 text("not set");
                                                 style(scaleFont(BUTTON_STYLE_32, BUTTON_STYLE_24)); 
                                                 alignCenter();
+                                                changingText(BUTTON_NAME, SCREEN_GAME, () -> wc.getPlayer().getName());
                                                 valign(VAlign.Center);
                                                 width("80%");
                                                 height("50%");
@@ -640,6 +709,7 @@ public class Gui implements ScreenController {
                                             {
                                                 text("not set");
                                                 font(scaleFont(ZEN_32, ZEN_24));
+                                                changingText(TEXT_DATE, SCREEN_GAME, () -> wc.getDate());
                                                 alignLeft();
                                                 width("100%");
                                                 height("50%");
@@ -652,6 +722,7 @@ public class Gui implements ScreenController {
                                     {
                                         text("not set");
                                         font(scaleFont(ZEN_32, ZEN_24));
+                                        changingText(TEXT_MONEY, SCREEN_GAME, () -> wc.getPlayer().getMoneyString());
                                         alignLeft();
                                         valign(VAlign.Center);
                                         width("5%");
@@ -683,10 +754,11 @@ public class Gui implements ScreenController {
         // no-op
     }
 
-    public void update() {
-        Screen currentScreen = nifty.getCurrentScreen();
-        String screenID = currentScreen.getScreenId();
-
+public void update() {
+        //Screen currentScreen = nifty.getCurrentScreen();
+        //String screenID = currentScreen.getScreenId();
+        updateChangingText();
+        /* 
         if (screenID.equals(SCREEN_GAME)) {
             // Money
             Element moneyElement = currentScreen.findElementById(TEXT_MONEY);
@@ -702,15 +774,31 @@ public class Gui implements ScreenController {
             }
             dateElement.getRenderer(TextRenderer.class).setText(getDate());
         }
+        */
     }
 
     public void updateName() {
-        Screen gameScreen = nifty.getScreen(SCREEN_GAME);
-        Element nameElement = gameScreen.findElementById(BUTTON_NAME + "#text");
-        if (nameElement != null) {
-            nameElement.getRenderer(TextRenderer.class).setText(getNameString());
-        } else {
-            System.out.println("name button is not found");
+        for (String id : businessNameTexts.keySet()) {
+            Screen screen = nifty.getScreen(businessNameTexts.get(id));
+
+            // text
+            Element element = screen.findElementById(id);
+            if (element != null) {
+                TextRenderer tr = element.getRenderer(TextRenderer.class);
+                if (tr != null) {
+                    tr.setText(getNameString());
+                    continue;
+                }
+            }
+
+            //button
+            Element buttonText = screen.findElementById(id + "#text");
+            if (buttonText != null) {
+                buttonText.getRenderer(TextRenderer.class).setText(getNameString());
+                continue;
+            }
+
+            System.out.println(id + " has no text renderer");
         }
     }
 
@@ -745,17 +833,7 @@ public class Gui implements ScreenController {
         return nifty;
     }
 
-    private String getMoneyString() {
-        int money = wc.getPlayer().getMoney();
-
-        if (money >= 1_000_000_000) {
-            return String.format("%.2fB", money / 1000000000.0);
-        } else if (money >= 1_000_000) {
-            return String.format("%.2fM", money / 1000000.0);
-        } else {
-            return "$" + String.valueOf(money);
-        }
-    }
+    
 
     public void chooseDepartment(String departmentName) {
         chosenDepartment = departmentName;
@@ -778,9 +856,46 @@ public class Gui implements ScreenController {
     public void toggleBusinessPanel() {
         Screen screen = nifty.getScreen(SCREEN_GAME);
         Element bPanel = screen.findElementById(LAYER_BUSINESS_PANEL);
-        
+
         if (bPanel != null) {
             bPanel.setVisible(!bPanel.isVisible());
+        }
+    }
+    
+    private void isBusinessName(String id, String screen) {
+        businessNameTexts.put(id, screen);
+    }
+    
+    
+    private void changingText(String id, String screen, Supplier<String> textSupplier) {
+        changingTextScreen.put(id, screen);
+        changingTextSupplier.put(id, textSupplier);
+    }
+
+    
+    
+    private void updateChangingText() {
+        for (String id : changingTextScreen.keySet()) {
+            Screen screen = nifty.getScreen(changingTextScreen.get(id));
+
+            // text
+            Element element = screen.findElementById(id);
+            if (element != null) {
+                TextRenderer tr = element.getRenderer(TextRenderer.class);
+                if (tr != null) {
+                    tr.setText(changingTextSupplier.get(id).get());
+                    continue;
+                }
+            }
+
+            // button
+            Element buttonText = screen.findElementById(id + "#text");
+            if (buttonText != null) {
+                buttonText.getRenderer(TextRenderer.class).setText(getNameString());
+                continue;
+            }
+
+            System.out.println(id + " has no text renderer");
         }
     }
 
