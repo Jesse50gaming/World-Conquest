@@ -2,11 +2,15 @@ package com.worldconquest;
 
 import java.awt.DisplayMode;
 import java.awt.GraphicsEnvironment;
+import java.awt.event.MouseListener;
 import java.util.HashMap;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.collision.CollisionResults;
 import com.jme3.font.BitmapText;
+import com.jme3.input.InputManager;
+import com.jme3.input.MouseInput;
+import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Ray;
@@ -16,6 +20,7 @@ import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Geometry;
 import com.jme3.system.AppSettings;
 import com.worldconquest.controls.OrbitCamera;
+import com.worldconquest.controls.PlayerInput;
 import com.worldconquest.departments.Department;
 import com.worldconquest.departments.extraction.BasicOreMining;
 
@@ -33,8 +38,9 @@ public class WorldConquest extends SimpleApplication {
     public GameState gameState = GameState.TITLE;
     private Calender calender;
     private Player player;
-
-   
+    private PlayerInput playerInput;
+    
+    
 
     public static void main(String[] args) {
         WorldConquest app = new WorldConquest();
@@ -133,7 +139,7 @@ public class WorldConquest extends SimpleApplication {
     }
     
 
-    private enum GameState {
+    public enum GameState {
         TITLE,
         GAME,
     }
@@ -145,7 +151,8 @@ public class WorldConquest extends SimpleApplication {
         initLight();
         initCamera();
         gui = new Gui(this);
-        gui.initGui(); 
+        gui.initGui();
+        playerInput = new PlayerInput(inputManager, this);
         
     }
     
@@ -153,7 +160,7 @@ public class WorldConquest extends SimpleApplication {
 
     
 
- private void initCamera() {
+    private void initCamera() {
         orbitCamera = new OrbitCamera(cam, inputManager, earth.getEarthSpatial(),this);
         inputManager.setCursorVisible(true);
         orbitCamera.updateCamera();
@@ -201,13 +208,17 @@ public class WorldConquest extends SimpleApplication {
             System.err.println("error no starting department chose or " + chosenDepartment + "doesn't exist");
             startingDepartment = new BasicOreMining(this);
         }
-        
+
         player = new Player(businessName, this);
 
         player.addDepartment(startingDepartment);
-        
+
         calender = new Calender(1, 1, 2025, this);
         gameState = GameState.GAME;
+    }
+    
+    public GameState getGameState() {
+        return gameState;
     }
 
     
@@ -245,6 +256,31 @@ public class WorldConquest extends SimpleApplication {
         }
     }
 
+    public City getClosestCity() {
+        
+        Vector2f mousePos = inputManager.getCursorPosition();
+        CollisionResults results = new CollisionResults();
+        Vector3f click3d = cam.getWorldCoordinates(mousePos, 0f).clone();
+        Vector3f dir = cam.getWorldCoordinates(mousePos, 1f).subtractLocal(click3d).normalizeLocal();
+        Ray ray = new Ray(click3d, dir);
+        Vector2f cursor = inputManager.getCursorPosition();
+        rootNode.collideWith(ray, results);
+
+        if (results.size() > 0) {
+            Geometry target = results.getClosestCollision().getGeometry();
+
+            if (target.getUserData("cityID") != null) {
+                return earth.getCityFromID(target.getUserData("cityID"));
+            } else {
+                guiNode.detachAllChildren();
+            }
+        } else {
+            guiNode.detachAllChildren();
+        }
+        return null;
+
+    }
+
     private String formatPopulation(int population) {
         if (population >= 1000000) {
             return String.format("%.1fm", population / 1000000.0);
@@ -257,7 +293,7 @@ public class WorldConquest extends SimpleApplication {
 
     @Override
     public void simpleUpdate(float tpf) {
-
+       
         if (gameState == GameState.GAME) {
             cityRayCast();
             earth.update();

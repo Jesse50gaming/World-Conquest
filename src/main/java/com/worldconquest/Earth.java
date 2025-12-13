@@ -22,11 +22,12 @@ public class Earth {
     long worldPop;
     
     ArrayList<Country> countries;
-
+    HashMap<String, City> cityIDMap;
     public Earth(WorldConquest wc) {
         this.wc = wc;
         
         countries = new ArrayList<>();
+        cityIDMap = new HashMap<>();
         initEarth();
     }
 
@@ -140,8 +141,11 @@ public class Earth {
             } catch (NumberFormatException e) {
                 continue;
             }
+            String cityID = name+lat+lon;
+
             Country cityCountry = countryHashMap.get(countryName);
-            City city = new City(wc, lat, lon, population, name, cityCountry);
+            City city = new City(wc, lat, lon, population, name, cityCountry, cityID);
+            cityIDMap.put(cityID, city);
             countryHashMap.get(countryName).addCity(city);
         }
 
@@ -185,6 +189,10 @@ public class Earth {
 
     public float getRadius() {
         return radius;
+    }
+
+    public City getCityFromID(String cityID) {
+        return cityIDMap.get(cityID);
     }
 
     

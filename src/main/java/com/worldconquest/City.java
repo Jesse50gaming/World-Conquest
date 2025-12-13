@@ -18,15 +18,16 @@ public class City {
     Geometry cityGeometry;
     Country country;
     ColorRGBA color;
+    String cityID;
 
-    public City(WorldConquest wc, float lat, float lon, int population, String name, Country country) {
+    public City(WorldConquest wc, float lat, float lon, int population, String name, Country country, String cityID) {
         this.wc = wc;
         this.population = population;
         this.name = name;
         this.country = country;
         coordinates = new Coordinate(lat, lon, wc);
         color = new ColorRGBA(country.getColor());
-        
+        this.cityID = cityID;
         initCity();
     }
     
@@ -83,6 +84,7 @@ public class City {
         cityGeometry.setUserData("cityName", name);
         cityGeometry.setUserData("population", population);
         cityGeometry.setUserData("countryName", country.getName());
+        cityGeometry.setUserData("cityID", cityID);
         wc.getRootNode().attachChild(cityGeometry);
 
     }

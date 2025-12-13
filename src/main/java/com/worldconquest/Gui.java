@@ -92,10 +92,17 @@ public class Gui implements ScreenController {
     public static final String TEXT_DATE = "date";
     public static final String TEXT_MONEY = "money";
 
+    public enum ScreenState {
+        START_GAME,
+        NEW_GAME,
+        GAME
+    }
+
+    private HashMap<ScreenState, String> screenStateMap; 
 
     //Other
     private String chosenDepartment = "Not chosen";
-
+    private ScreenState screenState = ScreenState.START_GAME;
     private int screenResolution;
 
     private HashMap<String, String> startingDepartmentsButtons;
@@ -103,6 +110,14 @@ public class Gui implements ScreenController {
     public Gui(WorldConquest wc) {
         this.wc = wc;
         startingDepartmentsButtons = new HashMap<>();
+        screenStateMap = new HashMap<>();
+        initScreenStateMap();
+    }
+
+    private void initScreenStateMap() {
+        screenStateMap.put(ScreenState.START_GAME, SCREEN_START);
+        screenStateMap.put(ScreenState.NEW_GAME, SCREEN_NEW_GAME);
+        screenStateMap.put(ScreenState.GAME, SCREEN_GAME);
     }
 
     private void createStyles() {
@@ -254,6 +269,11 @@ public class Gui implements ScreenController {
             return font1440;
         }
     }
+
+    public ScreenState getScreenState() {
+        return screenState;
+    }
+
 
     public void initGui() {
         NiftyJmeDisplay niftyDisplay = NiftyJmeDisplay.newNiftyJmeDisplay(wc.getAssetManager(), wc.getInputManager(), wc.getAudioRenderer(), wc.getGuiViewPort());
@@ -645,7 +665,7 @@ public class Gui implements ScreenController {
             }
         }.build(nifty));
 
-        nifty.gotoScreen(SCREEN_START);
+        setScreenState(ScreenState.START_GAME);
     }
 
     @Override
@@ -702,18 +722,23 @@ public class Gui implements ScreenController {
         return wc.getPlayer().getName();
     }
 
+    public void setScreenState(ScreenState state) {
+        screenState = state;
+        nifty.gotoScreen(screenStateMap.get(state));
+    }
+
     public void startNewGame() {
         wc.startNewGame();
-        nifty.gotoScreen(SCREEN_GAME);
+        setScreenState(ScreenState.GAME);
         updateName();
     }
 
     public void newGameScreen() {
-        nifty.gotoScreen(SCREEN_NEW_GAME);
+        setScreenState(ScreenState.NEW_GAME);
     }
 
     public void backToStart() {
-        nifty.gotoScreen(SCREEN_START);
+        setScreenState(ScreenState.START_GAME);
     }
 
     public Nifty getNifty() {
