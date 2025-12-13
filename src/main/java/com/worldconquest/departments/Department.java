@@ -23,12 +23,12 @@ public abstract class Department {
     }
 
     protected void init() {
-        createDepartment();
+        
     }
 
     protected abstract void doAction();
 
-    protected abstract void createDepartment();
+    protected abstract void create();
 
     
 
