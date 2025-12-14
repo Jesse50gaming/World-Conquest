@@ -32,6 +32,8 @@ public class Gui implements ScreenController {
     private static float heightScalar;
     private static float widthScalar;
 
+    private static final String BUTTON_IMAGE = "Interface/Images/ButtonBackground.png";
+
     // ------------------ Font file constants ------------------
     private static final String ZEN_96 = "Interface/Fonts/96/ZenDots96.fnt";
     private static final String ZEN_72 = "Interface/Fonts/72/ZenDots72.fnt";
@@ -612,20 +614,20 @@ public class Gui implements ScreenController {
         nifty.addScreen(SCREEN_GAME, new ScreenBuilder(SCREEN_GAME) {
             {
                 controller(Gui.this);
-                layer(new LayerBuilder(POP_UP_LAYER) {
-                    {
-                        childLayoutAbsolute();
-                        visible(true);
-                        
-                    }
-                });
+
+                
+                
                 layer(new LayerBuilder(LAYER_BUSINESS_PANEL) {
                     {
-                        childLayoutAbsolute();
+                        childLayoutVertical();
                         visible(false);
                         valignCenter();
                         alignCenter();
-
+                        panel(new PanelBuilder() {
+                            {
+                                height("20%");
+                            }
+                        });
 
                         panel(new PanelBuilder(BUSINESS_PANEL) {
                             {
@@ -635,14 +637,9 @@ public class Gui implements ScreenController {
                                 alignCenter();
                                 valignCenter();
                                 childLayoutHorizontal();
-                                x("30%");
-                                y("20%");
+                                
 
-                                control(new DraggableBuilder(BUSINESS_PANEL+"#drag") { 
-                                    {
-                                        
-                                    }
-                                });
+                                
                                 panel(new PanelBuilder(LEFT_PANEL) {
                                     {
                                         height("100%");
@@ -729,6 +726,8 @@ public class Gui implements ScreenController {
                     }
                 });
 
+                
+
                 layer(new LayerBuilder(LAYER_HUD) {
                     {
                         childLayoutVertical();
@@ -797,6 +796,14 @@ public class Gui implements ScreenController {
                         });
                     }
                 });
+
+                layer(new LayerBuilder(POP_UP_LAYER) {
+                    {
+                        childLayoutAbsolute();
+                        visible(true);
+
+                    }
+                });
             }
         }.build(nifty));
 
@@ -860,40 +867,68 @@ public class Gui implements ScreenController {
         if (departments.contains(department)) return;
         departments.add(department);
 
-        departmentButtonIDs.put(department.getName() + " Button", department);
-       
-
         Screen gameScreen = nifty.getScreen(SCREEN_GAME);
         Element departmentPanel = gameScreen.findElementById(DEPARTMENTS);
-        Element layer = gameScreen.findElementById(POP_UP_LAYER);
-        if (departmentPanel == null) {
-            System.out.println("DEPARTMENTS panel not found!");
+        Element popupLayer = gameScreen.findElementById(POP_UP_LAYER);
+
+        if (departmentPanel == null || popupLayer == null) {
+            System.out.println("Required UI elements not found!");
             return;
         }
 
-        departmentPanelIDs.put(department.getName() + " Panel", department);
-        new PanelBuilder(department.getName() + " Panel") {
+        String panelId = department.getName() + " Panel";
+        String buttonId = department.getName() + " Button";
+
+        departmentPanelIDs.put(panelId, department);
+
+        // popup panel
+        new PanelBuilder(panelId) {
             {
-                height("40%");
                 width("30%");
+                height("40%");
+                x("35%");
+                y("30%");
                 visible(false);
-                childLayoutVertical();
+
+                childLayoutVertical(); 
                 backgroundImage(BUSINESS_PANEL_IMAGE);
 
+                // Drag bar (top)
+                panel(new PanelBuilder(panelId + "_drag") {
+                    {
+                        width("100%");
+                        height("8%");
+                        backgroundImage(BUTTON_IMAGE);
+                        childLayoutHorizontal();
+                        // THIS draggable drags the parent panel automatically
+                        control(new DraggableBuilder(panelId + "_Panel"));
+                    }
+                });
 
+                // Content area
+                panel(new PanelBuilder() {
+                    {
+                        y("8%");
+                        width("100%");
+                        height("92%");
+                        childLayoutVertical();
+                    }
+                });
             }
-        }.build(nifty,gameScreen, layer);
+        }.build(nifty, gameScreen, popupLayer);
 
-        new ButtonBuilder(department.getName() + " Button", department.getName()) {
+        // button
+        new ButtonBuilder(buttonId, department.getName()) {
             {
                 height("25%");
                 width("100%");
                 style(scaleFont(BUTTON_STYLE_32, BUTTON_STYLE_24));
                 alignCenter();
-                interactOnClick("openDepartmentPanel(" + department.getName() + " Panel)");// TODO open panel
+                interactOnClick("openDepartmentPanel(" + panelId + ")");
             }
         }.build(nifty, gameScreen, departmentPanel);
     }
+
     
     public void openDepartmentPanel(String departmentPanelID) {
         Screen gameScreen = nifty.getScreen(SCREEN_GAME);
@@ -903,13 +938,16 @@ public class Gui implements ScreenController {
         }
 
         Element deptPanel = gameScreen.findElementById(departmentPanelID);
-        
+
         if (deptPanel == null) {
-            System.out.println("department panel is null");
+            System.out.println("department panel is null but the string is " + departmentPanelID);
             return;
         }
         deptPanel.setVisible(!deptPanel.isVisible()); // toggle visibility
+        deptPanel.getParent().layoutElements();
     }
+    
+
 
     public void chooseDepartment(String departmentName) {
         chosenDepartment = departmentName;
