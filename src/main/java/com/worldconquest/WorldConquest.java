@@ -19,6 +19,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Geometry;
 import com.jme3.system.AppSettings;
+import com.worldconquest.Gui.ScreenState;
 import com.worldconquest.controls.OrbitCamera;
 import com.worldconquest.controls.PlayerInput;
 import com.worldconquest.departments.Department;
@@ -209,12 +210,17 @@ public class WorldConquest extends SimpleApplication {
             startingDepartment = new BasicOreMining(this);
         }
 
-        player = new Player(businessName, this);
-
-        player.addDepartment(startingDepartment);
+        
 
         calender = new Calender(1, 1, 2025, this);
         gameState = GameState.GAME;
+        player = new Player(businessName, this);
+
+        gui.setScreenState(ScreenState.GAME);
+        enqueue(() -> {
+            player.addDepartment(startingDepartment);
+        });
+        
     }
     
     public GameState getGameState() {

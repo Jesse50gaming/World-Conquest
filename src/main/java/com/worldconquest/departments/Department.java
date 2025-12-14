@@ -7,9 +7,12 @@ public abstract class Department {
     WorldConquest wc;
     DepartmentType departmentType;
 
-    public Department(WorldConquest wc, DepartmentType departmentType) {
+    String name = "unnamed";
+
+    public Department(WorldConquest wc, DepartmentType departmentType,String name) {
         this.wc = wc;
         this.departmentType = departmentType;
+        this.name = name;
         init();
     }
 
@@ -30,6 +33,8 @@ public abstract class Department {
 
     protected abstract void create();
 
-    
+    public String getName() {
+        return name;
+    }
 
 }

@@ -9,7 +9,7 @@ public class BasicOreMining extends Department {
     int cost = 10_000_000;
 
     public BasicOreMining(WorldConquest wc) {
-        super(wc, DepartmentType.Extraction);
+        super(wc, DepartmentType.Extraction, "Basic Ore Mining");
         
     }
 

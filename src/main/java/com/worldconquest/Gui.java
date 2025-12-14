@@ -6,6 +6,7 @@ import java.util.function.Supplier;
 
 import com.jme3.niftygui.NiftyJmeDisplay;
 import com.jme3.system.AppSettings;
+import com.worldconquest.departments.Department;
 
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.builder.LayerBuilder;
@@ -13,7 +14,9 @@ import de.lessvoid.nifty.builder.PanelBuilder;
 import de.lessvoid.nifty.builder.ScreenBuilder;
 import de.lessvoid.nifty.builder.StyleBuilder;
 import de.lessvoid.nifty.builder.TextBuilder;
+import de.lessvoid.nifty.controls.Button;
 import de.lessvoid.nifty.controls.button.builder.ButtonBuilder;
+import de.lessvoid.nifty.controls.scrollpanel.builder.ScrollPanelBuilder;
 import de.lessvoid.nifty.controls.textfield.builder.TextFieldBuilder;
 import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.elements.render.TextRenderer;
@@ -23,6 +26,10 @@ import de.lessvoid.nifty.screen.ScreenController;
 public class Gui implements ScreenController {
     private WorldConquest wc;
     private Nifty nifty;
+
+
+    private static float heightScalar;
+    private static float widthScalar;
 
     // ------------------ Font file constants ------------------
     private static final String ZEN_96 = "Interface/Fonts/96/ZenDots96.fnt";
@@ -95,7 +102,7 @@ public class Gui implements ScreenController {
     public static final String TEXT_DATE = "date";
     public static final String TEXT_MONEY = "money";
 
-    //Business Panel
+//Business Panel
     public static final String LAYER_BUSINESS_PANEL = "BUSINESS_PANEL_LAYER";
     public static final String LEFT_PANEL = "LEFT_PANEL";
     public static final String RIGHT_PANEL = "RIGHT_PANEL";
@@ -103,6 +110,10 @@ public class Gui implements ScreenController {
     public static final String BUSINESS_PANEL_IMAGE = "Interface/Images/BusinessPanel.png";
     public static final String BUSINESS_PANEL = "BUSINESS_PANEL";
     public static final String BUSINESS_NAME_TEXT = "BUSINESS_NAME";
+    public static final String DEPARTMENT_SCROLL_PANEL = "DEPARTMENT_SCROLL_PANEL";
+    public static final String DEPARTMENTS = "DEPARTMENTS";
+    //Business Departments
+    public static HashMap<String, Department> departmentButtonIDs;
 
     public enum ScreenState {
         START_GAME,
@@ -110,12 +121,16 @@ public class Gui implements ScreenController {
         GAME
     }
 
-    private HashMap<ScreenState, String> screenStateMap; 
+    private HashMap<ScreenState, String> screenStateMap;
+    
+    //Business Panel
+    private ArrayList<Department> departments;
 
     //Other
     private String chosenDepartment = "Not chosen";
     private ScreenState screenState = ScreenState.START_GAME;
-    private int screenResolution;
+    private int screenHeight;
+    private int screenWidth;
 
     private HashMap<String, String> businessNameTexts;
     private HashMap<String, Supplier<String>> changingTextSupplier;
@@ -128,9 +143,17 @@ public class Gui implements ScreenController {
         startingDepartmentsButtons = new HashMap<>();
         screenStateMap = new HashMap<>();
         businessNameTexts = new HashMap<>();
-
+        departments = new ArrayList<>();
         changingTextScreen = new HashMap<>();
         changingTextSupplier = new HashMap<>();
+        departmentButtonIDs = new HashMap<>();
+
+        AppSettings settings = wc.getContext().getSettings();
+        screenHeight = settings.getHeight();
+        screenWidth = settings.getWidth();
+
+        heightScalar = screenHeight / 1440;
+        widthScalar = screenWidth / 3440;
         initScreenStateMap();
     }
 
@@ -267,8 +290,7 @@ public class Gui implements ScreenController {
     }
 
     private void loadFonts() {
-        AppSettings settings = wc.getContext().getSettings();
-        screenResolution = settings.getHeight();
+        
 
         nifty.getRenderEngine().createFont(ZEN_16);
         nifty.getRenderEngine().createFont(ZEN_32);
@@ -281,9 +303,9 @@ public class Gui implements ScreenController {
     }
 
     private String scaleFont(String font1440, String font1080) {
-        if (screenResolution == 1440) {
+        if (screenHeight == 1440) {
             return font1440;
-        } else if (screenResolution == 1080) {
+        } else if (screenHeight == 1080) {
             return font1080;
         } else {
             return font1440;
@@ -650,6 +672,39 @@ public class Gui implements ScreenController {
                                         width("33%");
                                         childLayoutVertical();
                                         valignCenter();
+                                        panel(new PanelBuilder() {
+                                            {
+                                                childLayoutVertical();
+                                                height("5%");
+                                                text(new TextBuilder() {
+                                                    {
+                                                        text("Departments");
+                                                        font(scaleFont(ZEN_32, ZEN_24));
+                                                        height("100%");
+                                                        width("100%");
+                                                        alignCenter();
+                                                    }
+                                                });
+                                            }
+                                        }); 
+
+                                        
+                                        control(new ScrollPanelBuilder(DEPARTMENT_SCROLL_PANEL) {
+                                            {
+                                                width("100%");
+                                                height("50%");
+                                                childLayoutVertical();
+
+                                                panel(new PanelBuilder(DEPARTMENTS) {
+                                                    {
+                                                        height("100%");
+                                                        width("100%");
+                                                        childLayoutVertical();
+                                                    }
+                                                });
+                                            
+                                            }
+                                        });
 
                                     }
                                 });
@@ -754,53 +809,12 @@ public class Gui implements ScreenController {
         // no-op
     }
 
-public void update() {
-        //Screen currentScreen = nifty.getCurrentScreen();
-        //String screenID = currentScreen.getScreenId();
+    public void update() {
         updateChangingText();
-        /* 
-        if (screenID.equals(SCREEN_GAME)) {
-            // Money
-            Element moneyElement = currentScreen.findElementById(TEXT_MONEY);
-            if (moneyElement == null) {
-                return;
-            }
-            moneyElement.getRenderer(TextRenderer.class).setText(getMoneyString());
-
-            // Date
-            Element dateElement = currentScreen.findElementById(TEXT_DATE);
-            if (dateElement == null) {
-                return;
-            }
-            dateElement.getRenderer(TextRenderer.class).setText(getDate());
-        }
-        */
+        
     }
 
-    public void updateName() {
-        for (String id : businessNameTexts.keySet()) {
-            Screen screen = nifty.getScreen(businessNameTexts.get(id));
-
-            // text
-            Element element = screen.findElementById(id);
-            if (element != null) {
-                TextRenderer tr = element.getRenderer(TextRenderer.class);
-                if (tr != null) {
-                    tr.setText(getNameString());
-                    continue;
-                }
-            }
-
-            //button
-            Element buttonText = screen.findElementById(id + "#text");
-            if (buttonText != null) {
-                buttonText.getRenderer(TextRenderer.class).setText(getNameString());
-                continue;
-            }
-
-            System.out.println(id + " has no text renderer");
-        }
-    }
+    
 
     private String getDate() {
         return wc.getDate();
@@ -817,8 +831,8 @@ public void update() {
 
     public void startNewGame() {
         wc.startNewGame();
-        setScreenState(ScreenState.GAME);
-        updateName();
+        
+        
     }
 
     public void newGameScreen() {
@@ -833,7 +847,35 @@ public void update() {
         return nifty;
     }
 
+    public void updateDepartments(Department department) {
+        if (departments.contains(department)) return;
+        departments.add(department);
+
+        departmentButtonIDs.put(department.getName() + " Button", department);
+
+        Screen gameScreen = nifty.getScreen(SCREEN_GAME);
+        Element departmentPanel = gameScreen.findElementById(DEPARTMENTS);
+
+        if (departmentPanel == null) {
+            System.out.println("DEPARTMENTS panel not found!");
+            return;
+        }
+
+
+        new ButtonBuilder(department.getName() + " Button", department.getName()) {
+            {
+                height("25%");
+                width("100%");
+                style(scaleFont(BUTTON_STYLE_32, BUTTON_STYLE_24));
+                alignCenter();
+                interactOnClick("openDepartmentMenu(department.getName())");// TODO open panel
+            }
+        }.build(nifty, gameScreen, departmentPanel);
+    }
     
+    public void openDepartmentMenu(String departmentMenuID) {
+        System.out.println("fjwacidnaiwcdhniauwjdiawjdciawndiawndianmdiandiandianwdina");
+    }
 
     public void chooseDepartment(String departmentName) {
         chosenDepartment = departmentName;
@@ -862,9 +904,6 @@ public void update() {
         }
     }
     
-    private void isBusinessName(String id, String screen) {
-        businessNameTexts.put(id, screen);
-    }
     
     
     private void changingText(String id, String screen, Supplier<String> textSupplier) {
