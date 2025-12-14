@@ -16,6 +16,7 @@ import de.lessvoid.nifty.builder.StyleBuilder;
 import de.lessvoid.nifty.builder.TextBuilder;
 import de.lessvoid.nifty.controls.Button;
 import de.lessvoid.nifty.controls.button.builder.ButtonBuilder;
+import de.lessvoid.nifty.controls.dragndrop.builder.DraggableBuilder;
 import de.lessvoid.nifty.controls.scrollpanel.builder.ScrollPanelBuilder;
 import de.lessvoid.nifty.controls.textfield.builder.TextFieldBuilder;
 import de.lessvoid.nifty.elements.Element;
@@ -112,8 +113,12 @@ public class Gui implements ScreenController {
     public static final String BUSINESS_NAME_TEXT = "BUSINESS_NAME";
     public static final String DEPARTMENT_SCROLL_PANEL = "DEPARTMENT_SCROLL_PANEL";
     public static final String DEPARTMENTS = "DEPARTMENTS";
+    
+    public static final String POP_UP_LAYER = "POP_UP_LAYER";
+    
     //Business Departments
     public static HashMap<String, Department> departmentButtonIDs;
+    public static HashMap<String, Department> departmentPanelIDs;
 
     public enum ScreenState {
         START_GAME,
@@ -132,7 +137,7 @@ public class Gui implements ScreenController {
     private int screenHeight;
     private int screenWidth;
 
-    private HashMap<String, String> businessNameTexts;
+    
     private HashMap<String, Supplier<String>> changingTextSupplier;
     private HashMap<String, String> changingTextScreen;
 
@@ -142,12 +147,12 @@ public class Gui implements ScreenController {
         this.wc = wc;
         startingDepartmentsButtons = new HashMap<>();
         screenStateMap = new HashMap<>();
-        businessNameTexts = new HashMap<>();
+        
         departments = new ArrayList<>();
         changingTextScreen = new HashMap<>();
         changingTextSupplier = new HashMap<>();
         departmentButtonIDs = new HashMap<>();
-
+        departmentPanelIDs = new HashMap<>();
         AppSettings settings = wc.getContext().getSettings();
         screenHeight = settings.getHeight();
         screenWidth = settings.getWidth();
@@ -607,19 +612,20 @@ public class Gui implements ScreenController {
         nifty.addScreen(SCREEN_GAME, new ScreenBuilder(SCREEN_GAME) {
             {
                 controller(Gui.this);
-
+                layer(new LayerBuilder(POP_UP_LAYER) {
+                    {
+                        childLayoutAbsolute();
+                        visible(true);
+                        
+                    }
+                });
                 layer(new LayerBuilder(LAYER_BUSINESS_PANEL) {
                     {
-                        childLayoutVertical();
+                        childLayoutAbsolute();
                         visible(false);
                         valignCenter();
                         alignCenter();
 
-                        panel(new PanelBuilder() {
-                            {
-                                height("20%");
-                            }
-                        });
 
                         panel(new PanelBuilder(BUSINESS_PANEL) {
                             {
@@ -629,7 +635,14 @@ public class Gui implements ScreenController {
                                 alignCenter();
                                 valignCenter();
                                 childLayoutHorizontal();
+                                x("30%");
+                                y("20%");
 
+                                control(new DraggableBuilder(BUSINESS_PANEL+"#drag") { 
+                                    {
+                                        
+                                    }
+                                });
                                 panel(new PanelBuilder(LEFT_PANEL) {
                                     {
                                         height("100%");
@@ -712,11 +725,7 @@ public class Gui implements ScreenController {
                             }
                         });
 
-                        panel(new PanelBuilder() {
-                            {
-                                height("20%");
-                            }
-                        });
+                        
                     }
                 });
 
@@ -852,15 +861,28 @@ public class Gui implements ScreenController {
         departments.add(department);
 
         departmentButtonIDs.put(department.getName() + " Button", department);
+       
 
         Screen gameScreen = nifty.getScreen(SCREEN_GAME);
         Element departmentPanel = gameScreen.findElementById(DEPARTMENTS);
-
+        Element layer = gameScreen.findElementById(POP_UP_LAYER);
         if (departmentPanel == null) {
             System.out.println("DEPARTMENTS panel not found!");
             return;
         }
 
+        departmentPanelIDs.put(department.getName() + " Panel", department);
+        new PanelBuilder(department.getName() + " Panel") {
+            {
+                height("40%");
+                width("30%");
+                visible(false);
+                childLayoutVertical();
+                backgroundImage(BUSINESS_PANEL_IMAGE);
+
+
+            }
+        }.build(nifty,gameScreen, layer);
 
         new ButtonBuilder(department.getName() + " Button", department.getName()) {
             {
@@ -868,13 +890,25 @@ public class Gui implements ScreenController {
                 width("100%");
                 style(scaleFont(BUTTON_STYLE_32, BUTTON_STYLE_24));
                 alignCenter();
-                interactOnClick("openDepartmentMenu(department.getName())");// TODO open panel
+                interactOnClick("openDepartmentPanel(" + department.getName() + " Panel)");// TODO open panel
             }
         }.build(nifty, gameScreen, departmentPanel);
     }
     
-    public void openDepartmentMenu(String departmentMenuID) {
-        System.out.println("fjwacidnaiwcdhniauwjdiawjdciawndiawndianmdiandiandianwdina");
+    public void openDepartmentPanel(String departmentPanelID) {
+        Screen gameScreen = nifty.getScreen(SCREEN_GAME);
+        if (gameScreen == null) {
+            System.out.println("game screen is null");
+            return;
+        }
+
+        Element deptPanel = gameScreen.findElementById(departmentPanelID);
+        
+        if (deptPanel == null) {
+            System.out.println("department panel is null");
+            return;
+        }
+        deptPanel.setVisible(!deptPanel.isVisible()); // toggle visibility
     }
 
     public void chooseDepartment(String departmentName) {
@@ -930,7 +964,7 @@ public class Gui implements ScreenController {
             // button
             Element buttonText = screen.findElementById(id + "#text");
             if (buttonText != null) {
-                buttonText.getRenderer(TextRenderer.class).setText(getNameString());
+                buttonText.getRenderer(TextRenderer.class).setText(changingTextSupplier.get(id).get());
                 continue;
             }
 
