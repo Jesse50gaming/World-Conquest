@@ -336,6 +336,8 @@ public class Gui implements ScreenController {
         nifty.loadStyleFile("nifty-default-styles.xml");
         nifty.loadControlFile("nifty-default-controls.xml");
 
+        //nifty.setDebugOptionPanelColors(true); 
+                                                
         loadFonts();
         createStyles();
 
@@ -903,17 +905,23 @@ public class Gui implements ScreenController {
                 
                 panel(new PanelBuilder("header") {
                     {
-                        height("8%");
-                        childLayoutHorizontal();
+                        height("3%");
+                        childLayoutAbsolute();
+                        padding("0px");
+                        margin("0px");
+                        valignTop();
 
                         // Close button
                         control(new ButtonBuilder("closeBtn", "X") {
                             {
+                                padding("0px");   
+                                margin("0px");
+                                x("95%");
+                                y("-165%");
                                 width("5%");
                                 height("100%");
                                 style(scaleFont(BUTTON_STYLE_16, BUTTON_STYLE_12));
-                                interactOnClick("toggleWindow(department)");
-                                alignRight();
+                                interactOnClick("openDepartmentPanel(" + panelId + ")");
                             }
                         });
                     }
@@ -922,8 +930,10 @@ public class Gui implements ScreenController {
                 // Content
                 panel(new PanelBuilder(panelId + "_content") {
                     {
-                        height("92%");
-                        childLayoutVertical();
+                        width("100%");
+                        height("97%");
+                        childLayoutHorizontal();
+
                     }
                 });
 
@@ -953,10 +963,7 @@ public class Gui implements ScreenController {
         department.toggleWindow();
     }
 
-    public void toggleWindow(Department department  ) {
-        department.toggleWindow();
-        
-    }
+    
     
 
 
