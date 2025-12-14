@@ -22,7 +22,7 @@ public class BasicOreMining extends Department {
 
     @Override
     public void create() {
-        
+        //TODO do this now
     }
 
 }
