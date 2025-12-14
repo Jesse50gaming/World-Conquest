@@ -1,4 +1,4 @@
-package com.worldconquest;
+package com.worldconquest.gui;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,19 +6,24 @@ import java.util.function.Supplier;
 
 import com.jme3.niftygui.NiftyJmeDisplay;
 import com.jme3.system.AppSettings;
+import com.worldconquest.WorldConquest;
+import com.worldconquest.WorldConquest.GameState;
 import com.worldconquest.departments.Department;
 
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.builder.LayerBuilder;
 import de.lessvoid.nifty.builder.PanelBuilder;
+import de.lessvoid.nifty.builder.PopupBuilder;
 import de.lessvoid.nifty.builder.ScreenBuilder;
 import de.lessvoid.nifty.builder.StyleBuilder;
 import de.lessvoid.nifty.builder.TextBuilder;
 import de.lessvoid.nifty.controls.Button;
+import de.lessvoid.nifty.controls.button.ButtonControl;
 import de.lessvoid.nifty.controls.button.builder.ButtonBuilder;
 import de.lessvoid.nifty.controls.dragndrop.builder.DraggableBuilder;
 import de.lessvoid.nifty.controls.scrollpanel.builder.ScrollPanelBuilder;
 import de.lessvoid.nifty.controls.textfield.builder.TextFieldBuilder;
+import de.lessvoid.nifty.controls.window.builder.WindowBuilder;
 import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.elements.render.TextRenderer;
 import de.lessvoid.nifty.screen.Screen;
@@ -881,41 +886,51 @@ public class Gui implements ScreenController {
 
         departmentPanelIDs.put(panelId, department);
 
-        // popup panel
-        new PanelBuilder(panelId) {
+        Element window;
+        
+
+        window = new WindowBuilder(panelId, department.getName()) {
             {
-                width("30%");
-                height("40%");
                 x("35%");
                 y("30%");
+                width("30%");
+                height("40%");
                 visible(false);
-
-                childLayoutVertical(); 
                 backgroundImage(BUSINESS_PANEL_IMAGE);
 
-                // Drag bar (top)
-                panel(new PanelBuilder(panelId + "_drag") {
+                childLayoutVertical();
+                closeable(false);
+                
+                panel(new PanelBuilder("header") {
                     {
-                        width("100%");
                         height("8%");
-                        backgroundImage(BUTTON_IMAGE);
                         childLayoutHorizontal();
-                        // THIS draggable drags the parent panel automatically
-                        control(new DraggableBuilder(panelId + "_Panel"));
+
+                        // Close button
+                        control(new ButtonBuilder("closeBtn", "X") {
+                            {
+                                width("5%");
+                                height("100%");
+                                style(scaleFont(BUTTON_STYLE_16, BUTTON_STYLE_12));
+                                interactOnClick("toggleWindow(department)");
+                                alignRight();
+                            }
+                        });
                     }
                 });
 
-                // Content area
-                panel(new PanelBuilder() {
+                // Content
+                panel(new PanelBuilder(panelId + "_content") {
                     {
-                        y("8%");
-                        width("100%");
                         height("92%");
                         childLayoutVertical();
                     }
                 });
+
             }
         }.build(nifty, gameScreen, popupLayer);
+
+        department.setWindow(window);
 
         // button
         new ButtonBuilder(buttonId, department.getName()) {
@@ -931,20 +946,16 @@ public class Gui implements ScreenController {
 
     
     public void openDepartmentPanel(String departmentPanelID) {
-        Screen gameScreen = nifty.getScreen(SCREEN_GAME);
-        if (gameScreen == null) {
-            System.out.println("game screen is null");
-            return;
-        }
+        if (screenState != ScreenState.GAME || departmentPanelID == null) return;
 
-        Element deptPanel = gameScreen.findElementById(departmentPanelID);
+        Department department = departmentPanelIDs.get(departmentPanelID);
+        if (department == null) return;
+        department.toggleWindow();
+    }
 
-        if (deptPanel == null) {
-            System.out.println("department panel is null but the string is " + departmentPanelID);
-            return;
-        }
-        deptPanel.setVisible(!deptPanel.isVisible()); // toggle visibility
-        deptPanel.getParent().layoutElements();
+    public void toggleWindow(Department department  ) {
+        department.toggleWindow();
+        
     }
     
 

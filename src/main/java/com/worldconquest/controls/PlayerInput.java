@@ -20,10 +20,10 @@ import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.worldconquest.City;
-import com.worldconquest.Gui;
 import com.worldconquest.WorldConquest;
 import com.worldconquest.WorldConquest.GameState;
-import com.worldconquest.Gui.ScreenState;
+import com.worldconquest.gui.Gui;
+import com.worldconquest.gui.Gui.ScreenState;
 
 public class PlayerInput implements ActionListener, AnalogListener {
 

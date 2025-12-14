@@ -19,11 +19,12 @@ import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Geometry;
 import com.jme3.system.AppSettings;
-import com.worldconquest.Gui.ScreenState;
 import com.worldconquest.controls.OrbitCamera;
 import com.worldconquest.controls.PlayerInput;
 import com.worldconquest.departments.Department;
 import com.worldconquest.departments.extraction.BasicOreMining;
+import com.worldconquest.gui.Gui;
+import com.worldconquest.gui.Gui.ScreenState;
 
 import de.lessvoid.nifty.controls.TextField;
 
