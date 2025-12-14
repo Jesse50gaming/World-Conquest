@@ -934,6 +934,43 @@ public class Gui implements ScreenController {
                         height("97%");
                         childLayoutHorizontal();
 
+                        panel(new PanelBuilder(panelId + "_LEFT") {
+                            {
+                                width("50%");
+                                height("100%");
+                                childLayoutVertical();
+                            }
+                        });
+                        
+                        panel(new PanelBuilder(panelId + "_RIGHT") {
+                            {
+                                width("50%");
+                                height("100%");
+                                childLayoutVertical();
+
+                                text(new TextBuilder(panelId + "_ACTIONS_TITLE") {
+                                    {
+                                        alignCenter();
+                                        height("5%");
+                                        text("Actions");
+                                        font(scaleFont(ZEN_32, ZEN_24));
+                                    }
+                                });
+                                control(new ScrollPanelBuilder(buttonId+ "_ACTIONS") {
+                                    {
+                                        alignCenter();
+                                        backgroundColor("rgba(60, 55, 55, 1)");
+                                        childLayoutVertical();
+                                        height("95%");
+                                        width("90%");
+                                    }
+                                });
+
+                            }
+                        });
+
+                        
+
                     }
                 });
 
