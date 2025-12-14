@@ -122,6 +122,9 @@ public class Gui implements ScreenController {
     public static final String DEPARTMENTS = "DEPARTMENTS";
     
     public static final String POP_UP_LAYER = "POP_UP_LAYER";
+
+    //department window
+    public static final String DEPARTMENT_PANEL_BUILD = "DEPARTMENT_PANEL_BUILD";
     
     //Business Departments
     public static HashMap<String, Department> departmentButtonIDs;
@@ -717,6 +720,7 @@ public class Gui implements ScreenController {
                                                         height("100%");
                                                         width("100%");
                                                         childLayoutVertical();
+                                                        backgroundImage(BUSINESS_PANEL_IMAGE);
                                                     }
                                                 });
                                             
@@ -930,6 +934,7 @@ public class Gui implements ScreenController {
                 // Content
                 panel(new PanelBuilder(panelId + "_content") {
                     {
+                        backgroundImage(BUSINESS_PANEL_IMAGE);
                         width("100%");
                         height("97%");
                         childLayoutHorizontal();
@@ -956,13 +961,34 @@ public class Gui implements ScreenController {
                                         font(scaleFont(ZEN_32, ZEN_24));
                                     }
                                 });
-                                control(new ScrollPanelBuilder(buttonId+ "_ACTIONS") {
+                                control(new ScrollPanelBuilder(panelId+ "_ACTIONS_SCROLL_PANEL") {
                                     {
                                         alignCenter();
                                         backgroundColor("rgba(60, 55, 55, 1)");
                                         childLayoutVertical();
                                         height("95%");
                                         width("90%");
+
+                                        panel(new PanelBuilder(panelId + "_ACTIONS") {
+                                            {
+                                                height("100%");
+                                                width("100%");
+                                                childLayoutVertical();
+                                                alignCenter();
+                                                backgroundImage(BUSINESS_PANEL_IMAGE);
+
+                                                control(new ButtonBuilder(panelId + DEPARTMENT_PANEL_BUILD,"Build New") {
+                                                    {
+                                                        height("20%"); 
+                                                        width("100%");
+                                                        alignCenter();
+                                                        style(scaleFont(BUTTON_STYLE_32, BUTTON_STYLE_24));
+                                                        interactOnClick("buildNew("+ department +")");
+                                                        
+                                                    }
+                                                });
+                                            }
+                                        });
                                     }
                                 });
 
@@ -1063,6 +1089,10 @@ public class Gui implements ScreenController {
 
             System.out.println(id + " has no text renderer");
         }
+    }
+
+    public void buildNew(Department department) {
+        department.create();
     }
 
     public String getChosenDepartment() {

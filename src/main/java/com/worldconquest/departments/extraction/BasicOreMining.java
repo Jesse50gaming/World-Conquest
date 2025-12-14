@@ -21,7 +21,7 @@ public class BasicOreMining extends Department {
 
 
     @Override
-    protected void create() {
+    public void create() {
         
     }
 

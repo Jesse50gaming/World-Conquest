@@ -36,7 +36,7 @@ public abstract class Department {
 
     protected abstract void doAction();
 
-    protected abstract void create();
+    public abstract void create();
 
     public String getName() {
         return name;
