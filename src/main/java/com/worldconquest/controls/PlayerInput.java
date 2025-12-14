@@ -68,7 +68,12 @@ public class PlayerInput implements ActionListener, AnalogListener {
                 City city = wc.getClosestCity();
                 if (city != null) {
                     selectedCities.addFirst(city);
+                    city.toggleSelect();
+                    if (selectedCities.contains(city)) {
+                        selectedCities.remove(city);   
+                    }
                     if (selectedCities.size() > selectedCitiesGoal) {
+                        selectedCities.getLast().toggleSelect();
                         selectedCities.removeLast();
                     }
                 }

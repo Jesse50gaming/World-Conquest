@@ -19,6 +19,7 @@ public class City {
     Country country;
     ColorRGBA color;
     String cityID;
+    boolean selected = false;
 
     public City(WorldConquest wc, float lat, float lon, int population, String name, Country country, String cityID) {
         this.wc = wc;
@@ -32,7 +33,7 @@ public class City {
     }
     
     private void initCity() {
-        
+
         float heightOffset;
 
         if (population < 1000000) {
@@ -76,7 +77,7 @@ public class City {
             heightOffset = boxHeight / 2;
             cityGeometry.setLocalTranslation(pos.add(pos.normalize().mult(heightOffset)));
         }
-        
+
         // Material
         Material mat = new Material(wc.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
         mat.setColor("Color", color);
@@ -88,6 +89,18 @@ public class City {
         wc.getRootNode().attachChild(cityGeometry);
 
     }
+
+    public void toggleSelect() {
+        if (selected) {
+            selected = false;
+            cityGeometry.getMaterial().setColor("White_Color", new ColorRGBA(255,255,255,1));
+        } else {
+            selected = true;
+            cityGeometry.getMaterial().setColor("Color", color);
+        }
+    }
+    
+    
     
     private float specialCountryHeightMult(String country) {
         if(country.equals("Japan")) {
