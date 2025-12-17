@@ -98,6 +98,8 @@ public class City {
             selected = true;
             cityGeometry.getMaterial().setColor("Color", color);
         }
+        wc.getRootNode().attachChild(cityGeometry);
+        System.out.println(name +" selected");
     }
     
     

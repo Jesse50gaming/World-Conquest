@@ -4,6 +4,8 @@ import java.awt.DisplayMode;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.MouseListener;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.collision.CollisionResults;
@@ -152,14 +154,17 @@ public class WorldConquest extends SimpleApplication {
         earth.loadCitiesFromGeoNames(50000);
         initLight();
         initCamera();
-        gui = new Gui(this);
-        gui.initGui();
+        initGui();
         playerInput = new PlayerInput(inputManager, this);
         
     }
     
     
-
+    private void initGui() {
+        gui = new Gui(this);
+        Logger.getLogger("de.lessvoid").setLevel(Level.SEVERE);
+        gui.initGui();
+    }
     
 
     private void initCamera() {

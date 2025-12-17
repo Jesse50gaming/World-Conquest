@@ -338,7 +338,8 @@ public class Gui implements ScreenController {
         nifty = niftyDisplay.getNifty();
         nifty.loadStyleFile("nifty-default-styles.xml");
         nifty.loadControlFile("nifty-default-controls.xml");
-
+        
+        
         //nifty.setDebugOptionPanelColors(true); 
                                                 
         loadFonts();
