@@ -40,7 +40,13 @@ public class Business {
         }
     }
 
-    
+    public boolean spendMoney(int cost) {
+        if (cost > money) {
+            return false;
+        }
+        money -= cost;
+        return true;
+    }
 
 
 }

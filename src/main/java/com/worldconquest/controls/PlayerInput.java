@@ -81,11 +81,11 @@ public class PlayerInput implements ActionListener, AnalogListener {
         City city = wc.getClosestCity();
 
         if (city == null) {
-            System.out.println("city is null");
+            
             return;
         }
 
-        System.out.println("select toggle: " + city.getName());
+        
 
         
         if (selectedCities.contains(city)) {
@@ -131,6 +131,12 @@ public class PlayerInput implements ActionListener, AnalogListener {
         selectedCitiesMax = 0;
         selectedCitiesMin = 0;
         mousestate = MouseStates.NORMAL;
+    }
+
+    public ArrayList<City> getSelectedCities() {
+        ArrayList<City> cities = new ArrayList();
+        cities.addAll(selectedCities);
+        return cities;
     }
     
 

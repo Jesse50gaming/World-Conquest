@@ -1,6 +1,7 @@
 package com.worldconquest.departments;
 
 import com.worldconquest.WorldConquest;
+import com.worldconquest.buildings.Building;
 
 import de.lessvoid.nifty.controls.Window;
 import de.lessvoid.nifty.elements.Element;
@@ -10,7 +11,7 @@ public abstract class Department {
 
     protected WorldConquest wc;
     DepartmentType departmentType;
-
+    protected Building building;
     String name = "unnamed";
     Element window;
 
