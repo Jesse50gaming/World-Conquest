@@ -1,6 +1,7 @@
 package com.worldconquest.departments.extraction;
 
 import com.worldconquest.WorldConquest;
+import com.worldconquest.controls.PlayerInput.MouseStates;
 import com.worldconquest.departments.Department;
 import com.worldconquest.departments.Department.DepartmentType;
 
@@ -22,7 +23,8 @@ public class BasicOreMining extends Department {
 
     @Override
     public void create() {
-        //TODO do this now
+       
+        wc.getPlayerInput().startCitySelection(1,3);
     }
 
 }

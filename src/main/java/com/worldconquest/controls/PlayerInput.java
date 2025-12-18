@@ -34,7 +34,8 @@ public class PlayerInput implements ActionListener, AnalogListener {
     private static final String E_PRESSED = "E_PRESSED";
     private MouseStates mousestate = MouseStates.NORMAL;
     Deque<City> selectedCities = new ArrayDeque<>();
-    private int selectedCitiesGoal;
+    private int selectedCitiesMin;
+    private int selectedCitiesMax;
 
     public PlayerInput(InputManager input, WorldConquest wc) {
         this.input = input;
@@ -64,19 +65,9 @@ public class PlayerInput implements ActionListener, AnalogListener {
         }
 
         if (name.equals(LEFT_CLICK)) {
+            
             if (mousestate == MouseStates.CITYSELECTION) {
-                City city = wc.getClosestCity();
-                if (city != null) {
-                    selectedCities.addFirst(city);
-                    city.toggleSelect();
-                    if (selectedCities.contains(city)) {
-                        selectedCities.remove(city);   
-                    }
-                    if (selectedCities.size() > selectedCitiesGoal) {
-                        selectedCities.getLast().toggleSelect();
-                        selectedCities.removeLast();
-                    }
-                }
+               addToSelection(); 
                 
             }
         }
@@ -84,6 +75,34 @@ public class PlayerInput implements ActionListener, AnalogListener {
     
     public void update() {
 
+    }
+
+    private void addToSelection() {
+        City city = wc.getClosestCity();
+
+        if (city == null) {
+            System.out.println("city is null");
+            return;
+        }
+
+        System.out.println("select toggle: " + city.getName());
+
+        
+        if (selectedCities.contains(city)) {
+            selectedCities.remove(city);
+            city.toggleSelect();
+            return;
+        }
+
+       
+        selectedCities.addFirst(city);
+        city.toggleSelect();
+
+       
+        if (selectedCities.size() > selectedCitiesMax) {
+            City removed = selectedCities.removeLast();
+            removed.toggleSelect();
+        }
     }
 
     @Override
@@ -95,19 +114,22 @@ public class PlayerInput implements ActionListener, AnalogListener {
         NORMAL, CITYSELECTION
     }
 
-    public void startCitySelection(int cityNum) {
+    public void startCitySelection(int min ,int max) {
         selectedCities.clear();
-        selectedCitiesGoal = cityNum;
+        selectedCitiesMax = max;
+        selectedCitiesMin = min;
         mousestate = MouseStates.CITYSELECTION;
     }
 
-    public boolean selectedCitiesFull() {
-        return selectedCities.size() == selectedCitiesGoal;
+
+    public boolean selectedCitiesNumValid() {
+        return selectedCities.size() <= selectedCitiesMax && selectedCities.size() >= selectedCitiesMax;
     }
 
     public void endCitySelection() {
         selectedCities.clear();
-        selectedCitiesGoal = 0;
+        selectedCitiesMax = 0;
+        selectedCitiesMin = 0;
         mousestate = MouseStates.NORMAL;
     }
     

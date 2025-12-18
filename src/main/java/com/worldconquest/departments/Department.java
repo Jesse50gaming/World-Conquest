@@ -8,7 +8,7 @@ import de.lessvoid.nifty.elements.Element;
 
 public abstract class Department {
 
-    WorldConquest wc;
+    protected WorldConquest wc;
     DepartmentType departmentType;
 
     String name = "unnamed";

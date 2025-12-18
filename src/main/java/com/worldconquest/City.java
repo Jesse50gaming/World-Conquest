@@ -91,15 +91,13 @@ public class City {
     }
 
     public void toggleSelect() {
+        selected = !selected;
         if (selected) {
-            selected = false;
-            cityGeometry.getMaterial().setColor("White_Color", new ColorRGBA(255,255,255,1));
+            cityGeometry.getMaterial().setColor("Color", new ColorRGBA(ColorRGBA.White));
         } else {
-            selected = true;
             cityGeometry.getMaterial().setColor("Color", color);
         }
-        wc.getRootNode().attachChild(cityGeometry);
-        System.out.println(name +" selected");
+        
     }
     
     

@@ -195,6 +195,10 @@ public class WorldConquest extends SimpleApplication {
         rootNode.addLight(fill2);
     }
 
+    public PlayerInput getPlayerInput() {
+        return playerInput;
+    }
+
     public void startNewGame() {
 
         TextField nameField = gui.getNifty().getCurrentScreen().findNiftyControl(Gui.TEXTFIELD_NAME_INPUT, TextField.class);

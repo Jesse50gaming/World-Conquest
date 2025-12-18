@@ -926,7 +926,7 @@ public class Gui implements ScreenController {
                                 width("5%");
                                 height("100%");
                                 style(scaleFont(BUTTON_STYLE_16, BUTTON_STYLE_12));
-                                interactOnClick("openDepartmentPanel(" + panelId + ")");
+                                interactOnClick("openDepartmentPanel(" + panelId + ")");//toggles visibility
                             }
                         });
                     }
@@ -984,7 +984,7 @@ public class Gui implements ScreenController {
                                                         width("100%");
                                                         alignCenter();
                                                         style(scaleFont(BUTTON_STYLE_32, BUTTON_STYLE_24));
-                                                        interactOnClick("buildNew("+ department +")");
+                                                        interactOnClick("buildNew("+ panelId +")");
                                                         
                                                     }
                                                 });
@@ -1092,8 +1092,9 @@ public class Gui implements ScreenController {
         }
     }
 
-    public void buildNew(Department department) {
-        department.create();
+    public void buildNew(String departmentPanelID) {
+        
+        departmentPanelIDs.get(departmentPanelID).create();
     }
 
     public String getChosenDepartment() {
