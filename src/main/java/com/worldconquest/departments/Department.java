@@ -1,9 +1,10 @@
 package com.worldconquest.departments;
 
+import java.util.ArrayList;
+
 import com.worldconquest.WorldConquest;
 import com.worldconquest.buildings.Building;
 
-import de.lessvoid.nifty.controls.Window;
 import de.lessvoid.nifty.elements.Element;
 
 
@@ -11,24 +12,37 @@ public abstract class Department {
 
     protected WorldConquest wc;
     DepartmentType departmentType;
-    protected Building building;
+    protected int buildingCost;
     String name = "unnamed";
     Element window;
+    ArrayList<Building> buildings = new ArrayList<>();
 
-    public Department(WorldConquest wc, DepartmentType departmentType,String name) {
+    public Department(WorldConquest wc, DepartmentType departmentType,String name, int buildingCost) {
         this.wc = wc;
         this.departmentType = departmentType;
         this.name = name;
+        this.buildingCost = buildingCost;
         init();
     }
 
     public void update() {
         doAction();
+        updateBuildings();
+    }
+
+    public void dailyUpdate() {
+        updateBuildings();
     }
 
     public enum DepartmentType {
         Farming, Extraction, Transportation, Manufacturing,
 
+    }
+
+    private void updateBuildings() {
+        for (Building building : buildings) {
+            building.dailyUpdate();
+        }
     }
 
     protected void init() {

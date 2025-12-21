@@ -5,18 +5,18 @@ import java.util.ArrayList;
 import com.worldconquest.City;
 import com.worldconquest.WorldConquest;
 import com.worldconquest.buildings.BasicOreMine;
-import com.worldconquest.controls.PlayerInput.MouseStates;
 import com.worldconquest.departments.Department;
 import com.worldconquest.departments.Department.DepartmentType;
 
 public class BasicOreMining extends Department {
 
-    int cost = 10_000_000;
+    
     
 
     public BasicOreMining(WorldConquest wc) {
-        super(wc, DepartmentType.Extraction, "Basic Ore Mining");
-        building = new BasicOreMine();
+        super(wc, DepartmentType.Extraction, "Basic Ore Mining",10000000);
+        
+       
         
     }
 
@@ -40,7 +40,7 @@ public class BasicOreMining extends Department {
         wc.getPlayerInput().endCitySelection();
 
         for (City city : cities) {
-            
+            city.addBuilding(new BasicOreMine(wc,city));
         }
 
 

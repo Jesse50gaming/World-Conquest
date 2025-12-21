@@ -48,5 +48,15 @@ public class Business {
         return true;
     }
 
-
+    public void update() {
+        for (Department department : departments) {
+            department.update();
+        }
+    }
+    
+    public void dailyUpdate() {
+        for (Department department : departments) {
+            department.dailyUpdate();
+        }
+    }
 }

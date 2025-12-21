@@ -1,12 +1,15 @@
 package com.worldconquest;
 
 
+import java.util.ArrayList;
+
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
 import com.jme3.scene.shape.Cylinder;
+import com.worldconquest.buildings.Building;
 import com.worldconquest.util.Coordinate;
 
 public class City {
@@ -20,6 +23,7 @@ public class City {
     ColorRGBA color;
     String cityID;
     boolean selected = false;
+    ArrayList<Building> buildings = new ArrayList<>();
 
     public City(WorldConquest wc, float lat, float lon, int population, String name, Country country, String cityID) {
         this.wc = wc;
@@ -128,5 +132,12 @@ public class City {
     public Coordinate getCoords() {
         return coordinates;
     }
+
+    public void addBuilding(Building building) {
+        buildings.add(building);
+
+    }
+    
+    
 
 }

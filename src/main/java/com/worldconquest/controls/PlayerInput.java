@@ -3,10 +3,6 @@ package com.worldconquest.controls;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
-import java.util.Set;
-
-import com.jme3.collision.CollisionResults;
-import com.jme3.font.BitmapText;
 import com.jme3.input.InputManager;
 import com.jme3.input.KeyInput;
 import com.jme3.input.MouseInput;
@@ -14,14 +10,8 @@ import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.AnalogListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
-import com.jme3.math.ColorRGBA;
-import com.jme3.math.Ray;
-import com.jme3.math.Vector2f;
-import com.jme3.math.Vector3f;
-import com.jme3.scene.Geometry;
 import com.worldconquest.City;
 import com.worldconquest.WorldConquest;
-import com.worldconquest.WorldConquest.GameState;
 import com.worldconquest.gui.Gui;
 import com.worldconquest.gui.Gui.ScreenState;
 

@@ -2,7 +2,6 @@ package com.worldconquest;
 
 import java.awt.DisplayMode;
 import java.awt.GraphicsEnvironment;
-import java.awt.event.MouseListener;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -10,9 +9,6 @@ import java.util.logging.Logger;
 import com.jme3.app.SimpleApplication;
 import com.jme3.collision.CollisionResults;
 import com.jme3.font.BitmapText;
-import com.jme3.input.InputManager;
-import com.jme3.input.MouseInput;
-import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Ray;
@@ -113,6 +109,7 @@ public class WorldConquest extends SimpleApplication {
         }
 
         public void update() {
+            
             if (frameNum == FPS * dayLegnth) {
                 frameNum = 0;
                 dailyUpdate();
@@ -315,6 +312,7 @@ public class WorldConquest extends SimpleApplication {
             earth.update();
             gui.update();
             calender.update();
+            player.update();
         }
         
         
@@ -322,6 +320,7 @@ public class WorldConquest extends SimpleApplication {
     
     public void dailyUpdate() {
         earth.dailyUpdate();
+        player.dailyUpdate();
     }
 
     @Override

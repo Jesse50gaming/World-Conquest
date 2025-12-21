@@ -15,7 +15,7 @@ public class ColorHelper {
         ColorRGBA.Magenta,
         ColorRGBA.Cyan,       
         ColorRGBA.Orange, 
-        ColorRGBA.Pink, 
+        ColorRGBA.fromRGBA255(255, 20, 20, 255), 
         ColorRGBA.Brown, 
         ColorRGBA.DarkGray
     };
