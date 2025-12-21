@@ -7,20 +7,15 @@ import java.util.function.Supplier;
 import com.jme3.niftygui.NiftyJmeDisplay;
 import com.jme3.system.AppSettings;
 import com.worldconquest.WorldConquest;
-import com.worldconquest.WorldConquest.GameState;
 import com.worldconquest.departments.Department;
 
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.builder.LayerBuilder;
 import de.lessvoid.nifty.builder.PanelBuilder;
-import de.lessvoid.nifty.builder.PopupBuilder;
 import de.lessvoid.nifty.builder.ScreenBuilder;
 import de.lessvoid.nifty.builder.StyleBuilder;
 import de.lessvoid.nifty.builder.TextBuilder;
-import de.lessvoid.nifty.controls.Button;
-import de.lessvoid.nifty.controls.button.ButtonControl;
 import de.lessvoid.nifty.controls.button.builder.ButtonBuilder;
-import de.lessvoid.nifty.controls.dragndrop.builder.DraggableBuilder;
 import de.lessvoid.nifty.controls.scrollpanel.builder.ScrollPanelBuilder;
 import de.lessvoid.nifty.controls.textfield.builder.TextFieldBuilder;
 import de.lessvoid.nifty.controls.window.builder.WindowBuilder;
@@ -286,6 +281,7 @@ public class Gui implements ScreenController {
                 id(id + "#text");
                 font(fontFile);
                 color("#ffffffff");
+                
             }
         }.build(nifty);
 
@@ -549,7 +545,7 @@ public class Gui implements ScreenController {
                                         height("100%");
                                         width("30%");
                                         alignCenter();
-                                        startingDepartmentsButtons.put("Basic Ore Mining", BUTTON_BASIC_ORE);
+                                        startingDepartmentsButtons.put("Basic Ore \n Mining", BUTTON_BASIC_ORE);
                                         interactOnClick("chooseDepartment(Basic Ore Mining)");
                                     }
                                 });
@@ -567,7 +563,7 @@ public class Gui implements ScreenController {
                                         startingDepartmentsButtons.put("Bus Transportation", BUTTON_BUS_TRANSPORT);
                                         style(scaleFont(BUTTON_STYLE_32, BUTTON_STYLE_24));
                                         alignCenter();
-                                        interactOnClick("chooseDepartment(Bus Transportation)");
+                                        interactOnClick("chooseDepartment(Bus \n Transportation)"); //TODO fix font
                                     }
                                 });
 
@@ -577,7 +573,7 @@ public class Gui implements ScreenController {
                                     }
                                 });
 
-                                control(new ButtonBuilder(BUTTON_STEEL_MANUFACTURING, "Steel Manufacturing") {
+                                control(new ButtonBuilder(BUTTON_STEEL_MANUFACTURING, "Steel \n Manufacturing") {
                                     {
                                         height("100%");
                                         width("30%");
@@ -585,6 +581,7 @@ public class Gui implements ScreenController {
                                         style(scaleFont(BUTTON_STYLE_32, BUTTON_STYLE_24));
                                         alignCenter();
                                         interactOnClick("chooseDepartment(Steel Manufacturing)");
+                                        
                                     }
                                 });
                             }
@@ -607,7 +604,7 @@ public class Gui implements ScreenController {
 
                                 control(new ButtonBuilder(BUTTON_START_GAME, "Start New Game") {
                                     {
-                                        style(scaleFont(BUTTON_STYLE_64, BUTTON_STYLE_48));
+                                        style(scaleFont(BUTTON_STYLE_64, BUTTON_STYLE_32));
                                         height("100%");
                                         width("100%");
                                         alignCenter();
