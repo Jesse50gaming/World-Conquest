@@ -31,7 +31,7 @@ public abstract class Department {
     }
 
     public void dailyUpdate() {
-        updateBuildings();
+        updateDailyBuildings();
     }
 
     public enum DepartmentType {
@@ -40,6 +40,12 @@ public abstract class Department {
     }
 
     private void updateBuildings() {
+        for (Building building : buildings) {
+            building.update();
+        }
+    }
+
+    private void updateDailyBuildings() {
         for (Building building : buildings) {
             building.dailyUpdate();
         }
@@ -68,7 +74,11 @@ public abstract class Department {
             window.hide();
         } else {
             window.show();
-        }   
+        }
+    }
+    
+    public int getBuildingCost() {
+        return buildingCost;
     }
 
 }

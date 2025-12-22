@@ -109,7 +109,7 @@ public class PlayerInput implements ActionListener, AnalogListener {
     }
 
     public boolean selectedCitiesNumValid() {
-        return selectedCities.size() <= selectedCitiesMax && selectedCities.size() >= selectedCitiesMax;
+        return selectedCities.size() <= selectedCitiesMax && selectedCities.size() >= selectedCitiesMin;
     }
 
     public void endCitySelection() {

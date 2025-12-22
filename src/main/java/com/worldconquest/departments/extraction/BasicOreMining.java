@@ -30,7 +30,7 @@ public class BasicOreMining extends Department {
     @Override
     public void startBuild() {
 
-        wc.getPlayerInput().startCitySelection(1, 3, this);
+        wc.getPlayerInput().startCitySelection(1, 10000, this);
 
     }
 

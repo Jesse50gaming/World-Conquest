@@ -6,6 +6,7 @@ import java.util.function.Supplier;
 
 import com.jme3.niftygui.NiftyJmeDisplay;
 import com.jme3.system.AppSettings;
+import com.worldconquest.City;
 import com.worldconquest.WorldConquest;
 import com.worldconquest.departments.Department;
 
@@ -1209,6 +1210,14 @@ public class Gui implements ScreenController {
             updateText(department.getName() + "_Window_ErrorText", "Not enough cities selected");
             return;
         }
+
+        for (City city : wc.getPlayerInput().getSelectedCities()) {
+            if (!wc.getPlayer().spendMoney(department.getBuildingCost())) {
+                updateText(department.getName() + "_Window_ErrorText", "Not enough money");
+                return;
+            }
+        }
+        
         department.endBuild();
         removeElement(department.getName() + "_Window");
     }

@@ -48,6 +48,10 @@ public class Business {
         return true;
     }
 
+    public void addMoney(int amount) {
+        money += amount;
+    }
+
     public void update() {
         for (Department department : departments) {
             department.update();

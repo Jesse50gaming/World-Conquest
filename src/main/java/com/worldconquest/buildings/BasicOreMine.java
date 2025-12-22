@@ -16,7 +16,8 @@ public class BasicOreMine extends Building {
 
     @Override
     public void dailyUpdate() {
-        
+        wc.getPlayer().spendMoney(upkeepCost);
+        wc.getPlayer().addMoney(1000000); // TODO resources
     }
 
     

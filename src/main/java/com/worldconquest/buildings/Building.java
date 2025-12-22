@@ -9,6 +9,7 @@ public abstract class Building {
     protected WorldConquest wc;
 
     public Building(WorldConquest wc,City city, int upkeepCost) {
+        this.wc = wc;
         this.city = city;
         this.upkeepCost = upkeepCost;
     }
