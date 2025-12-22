@@ -1102,17 +1102,14 @@ public class Gui implements ScreenController {
 
         Element window = new WindowBuilder(panelId, "Build") {
             {
-                x("35%");
-                y("30%");
+                x("50%");
+                y("60%");
                 width("30%");
                 height("40%");
                 visible(true);
-               
 
                 childLayoutVertical();
                 closeable(true);
-
-               
 
                 // Content 
                 panel(new PanelBuilder(panelId + "_content") {
@@ -1128,13 +1125,13 @@ public class Gui implements ScreenController {
                             }
                         });
 
-                        panel(new PanelBuilder(panelId + "_buildTitle") {
+                        panel(new PanelBuilder(panelId + "_Buttons") {
                             {
                                 height("50%");
                                 width("100%");
-                                childLayoutVertical();
+                                childLayoutHorizontal();
                                 alignCenter();
-                                
+
                                 control(new ButtonBuilder(panelId + "_buildBtn", "Build") {
                                     {
                                         height("100%");
@@ -1145,10 +1142,31 @@ public class Gui implements ScreenController {
                                         interactOnClick("endBuild(" + departmentPanelID + ")");
                                     }
                                 });
+
+                                control(new ButtonBuilder(panelId + "_cancelBtn", "Cancel") {
+                                    {
+                                        height("100%");
+                                        width("33%");
+                                        valignCenter();
+                                        style(scaleFont(BUTTON_STYLE_32, BUTTON_STYLE_24));
+                                        alignCenter();
+                                        interactOnClick("cancelBuild(" + panelId + ")");
+                                    }
+                                });
+                                control(new ButtonBuilder(panelId + "_clearBtn", "Clear") {
+                                    {
+                                        height("100%");
+                                        width("33%");
+                                        valignCenter();
+                                        style(scaleFont(BUTTON_STYLE_32, BUTTON_STYLE_24));
+                                        alignCenter();
+                                        interactOnClick("clearSelection()");
+                                    }
+                                });
                             }
                         });
 
-                        text(new TextBuilder(panelId + "_ErrorText" ) {
+                        text(new TextBuilder(panelId + "_ErrorText") {
                             {
                                 text("");
                                 font(scaleFont(ZEN_24, ZEN_16));
@@ -1158,13 +1176,21 @@ public class Gui implements ScreenController {
                             }
                         });
 
-                        
                     }
                 });
 
             }
         }.build(nifty, gameScreen, popupLayer);
 
+    }
+    
+    public void cancelBuild(String windowPanelID) {
+        removeElement(windowPanelID);
+        wc.getPlayerInput().endCitySelection();
+    }
+
+    public void clearSelection() {
+        wc.getPlayerInput().clearSelection();
     }
     
     public void endBuild(String departmentPanelID) {
