@@ -3,6 +3,7 @@ package com.worldconquest.controls;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
+
 import com.jme3.input.InputManager;
 import com.jme3.input.KeyInput;
 import com.jme3.input.MouseInput;
@@ -12,6 +13,7 @@ import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
 import com.worldconquest.City;
 import com.worldconquest.WorldConquest;
+import com.worldconquest.departments.Department;
 import com.worldconquest.gui.Gui;
 import com.worldconquest.gui.Gui.ScreenState;
 
@@ -39,7 +41,6 @@ public class PlayerInput implements ActionListener, AnalogListener {
         input.addMapping(LEFT_CLICK, new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
         input.addMapping(E_PRESSED, new KeyTrigger(KeyInput.KEY_E));
 
-
         input.addListener(this, LEFT_CLICK, E_PRESSED);
     }
 
@@ -55,14 +56,14 @@ public class PlayerInput implements ActionListener, AnalogListener {
         }
 
         if (name.equals(LEFT_CLICK)) {
-            
+
             if (mousestate == MouseStates.CITYSELECTION) {
-               addToSelection(); 
-                
+                addToSelection();
+
             }
         }
     }
-    
+
     public void update() {
 
     }
@@ -71,24 +72,19 @@ public class PlayerInput implements ActionListener, AnalogListener {
         City city = wc.getClosestCity();
 
         if (city == null) {
-            
+
             return;
         }
 
-        
-
-        
         if (selectedCities.contains(city)) {
             selectedCities.remove(city);
             city.toggleSelect();
             return;
         }
 
-       
         selectedCities.addFirst(city);
         city.toggleSelect();
 
-       
         if (selectedCities.size() > selectedCitiesMax) {
             City removed = selectedCities.removeLast();
             removed.toggleSelect();
@@ -104,20 +100,20 @@ public class PlayerInput implements ActionListener, AnalogListener {
         NORMAL, CITYSELECTION
     }
 
-    public void startCitySelection(int min ,int max) {
+    public void startCitySelection(int min, int max, Department department) {
         selectedCities.clear();
         selectedCitiesMax = max;
         selectedCitiesMin = min;
         mousestate = MouseStates.CITYSELECTION;
+        wc.getGui().newBuildWindow(department);
     }
-
 
     public boolean selectedCitiesNumValid() {
         return selectedCities.size() <= selectedCitiesMax && selectedCities.size() >= selectedCitiesMax;
     }
 
     public void endCitySelection() {
-        selectedCities.clear();
+        clearSelection();
         selectedCitiesMax = 0;
         selectedCitiesMin = 0;
         mousestate = MouseStates.NORMAL;
@@ -128,7 +124,11 @@ public class PlayerInput implements ActionListener, AnalogListener {
         cities.addAll(selectedCities);
         return cities;
     }
-    
 
-    
+    public void clearSelection() {
+        for (City city : selectedCities) {
+            city.toggleSelect();
+        }
+        selectedCities.clear();
+    }
 }

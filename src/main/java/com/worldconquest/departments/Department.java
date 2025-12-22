@@ -15,7 +15,7 @@ public abstract class Department {
     protected int buildingCost;
     String name = "unnamed";
     Element window;
-    ArrayList<Building> buildings = new ArrayList<>();
+    protected ArrayList<Building> buildings = new ArrayList<>();
 
     public Department(WorldConquest wc, DepartmentType departmentType,String name, int buildingCost) {
         this.wc = wc;
@@ -51,7 +51,8 @@ public abstract class Department {
 
     protected abstract void doAction();
 
-    public abstract void create();
+    public abstract void startBuild();
+    public abstract void endBuild();
 
     public String getName() {
         return name;

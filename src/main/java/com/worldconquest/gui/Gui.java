@@ -15,7 +15,6 @@ import de.lessvoid.nifty.builder.PanelBuilder;
 import de.lessvoid.nifty.builder.ScreenBuilder;
 import de.lessvoid.nifty.builder.StyleBuilder;
 import de.lessvoid.nifty.builder.TextBuilder;
-import de.lessvoid.nifty.controls.Button;
 import de.lessvoid.nifty.controls.button.builder.ButtonBuilder;
 import de.lessvoid.nifty.controls.scrollpanel.builder.ScrollPanelBuilder;
 import de.lessvoid.nifty.controls.textfield.builder.TextFieldBuilder;
@@ -888,8 +887,8 @@ public class Gui implements ScreenController {
             return;
         }
 
-        String panelId = department.getName() + " Panel";
-        String buttonId = department.getName() + " Button";
+        String panelId = department.getName() + "_Panel";
+        String buttonId = department.getName() + "_Button";
 
         departmentPanelIDs.put(panelId, department);
 
@@ -1098,7 +1097,8 @@ public class Gui implements ScreenController {
         Element popupLayer = gameScreen.findElementById(POP_UP_LAYER);
         if (popupLayer == null) return;
 
-        String panelId = department.getName() + " _BuildWindow";
+        String panelId = department.getName() + "_Window";
+        String departmentPanelID = department.getName() + "_Panel";
 
         Element window = new WindowBuilder(panelId, "Build") {
             {
@@ -1107,64 +1107,105 @@ public class Gui implements ScreenController {
                 width("30%");
                 height("40%");
                 visible(true);
-                backgroundImage(BUSINESS_PANEL_IMAGE);
+               
 
                 childLayoutVertical();
-                closeable(false);
+                closeable(true);
 
-                panel(new PanelBuilder(panelId + "_header") {
-                    {
-                        height("3%");
-                        childLayoutAbsolute();
-                        padding("0px");
-                        margin("0px");
-                        valignTop();
+               
 
-                        // Close button
-                        control(new ButtonBuilder(panelId + "_closeBtn", "X") {
-                            {
-                                padding("0px");   
-                                margin("0px");
-                                x("95%");
-                                y("-165%");
-                                width("5%");
-                                height("100%");
-                                style(scaleFont(BUTTON_STYLE_16, BUTTON_STYLE_12));
-                                interactOnClick("openDepartmentPanel(" + panelId + ")");
-                            }
-                        });
-                    }
-                });
-
-                // Content placeholder
+                // Content 
                 panel(new PanelBuilder(panelId + "_content") {
                     {
                         width("100%");
-                        height("97%");
-                        childLayoutHorizontal();
+                        height("100%");
+                        childLayoutVertical();
+                        backgroundImage(BUSINESS_PANEL_IMAGE);
 
-                        control(new ButtonBuilder(panelId + "_buildBtn", "Build") {
+                        panel(new PanelBuilder() {
+                            {
+                                height("20%");
+                            }
+                        });
+
+                        panel(new PanelBuilder(panelId + "_buildTitle") {
                             {
                                 height("50%");
                                 width("100%");
-                                valignCenter();
-                                style(scaleFont(BUTTON_STYLE_32, BUTTON_STYLE_24));
+                                childLayoutVertical();
                                 alignCenter();
-                                interactOnClick("");
-                            }//TODO do
+                                
+                                control(new ButtonBuilder(panelId + "_buildBtn", "Build") {
+                                    {
+                                        height("100%");
+                                        width("33%");
+                                        valignCenter();
+                                        style(scaleFont(BUTTON_STYLE_32, BUTTON_STYLE_24));
+                                        alignCenter();
+                                        interactOnClick("endBuild(" + departmentPanelID + ")");
+                                    }
+                                });
+                            }
                         });
+
+                        text(new TextBuilder(panelId + "_ErrorText" ) {
+                            {
+                                text("");
+                                font(scaleFont(ZEN_24, ZEN_16));
+                                height("30%");
+                                width("100%");
+                                alignCenter();
+                            }
+                        });
+
+                        
                     }
                 });
 
             }
         }.build(nifty, gameScreen, popupLayer);
 
+    }
+    
+    public void endBuild(String departmentPanelID) {
         
+        Department department = departmentPanelIDs.get(departmentPanelID);
+        if (department == null) {
+            System.out.println("endBuild called with invalid departmentPanelID: " + departmentPanelID);
+
+            for (String id : departmentPanelIDs.keySet()) {
+                System.out.println("Valid departmentPanelID: " + id);
+            }
+            return;
+        }
+        
+
+        if (!wc.getPlayerInput().selectedCitiesNumValid()) {
+            updateText(department.getName() + "_Window_ErrorText", "Not enough cities selected");
+            return;
+        }
+        department.endBuild();
+        Screen screen = nifty.getCurrentScreen();
+        Element window = screen.findElementById(department.getName() + "_Window");
+        window.markForRemoval();
+    }
+
+
+    public void updateText(String id, String text) {
+        Screen screen = nifty.getCurrentScreen();
+        if(screen == null) return;
+        Element element = screen.findElementById(id);
+        if (element != null) {
+            TextRenderer tr = element.getRenderer(TextRenderer.class);
+            if (tr != null) {
+                tr.setText(text);
+            }
+        }
     }
 
     public void buildNew(String departmentPanelID) {
         
-        departmentPanelIDs.get(departmentPanelID).create();
+        departmentPanelIDs.get(departmentPanelID).startBuild();
     }
 
     public String getChosenDepartment() {

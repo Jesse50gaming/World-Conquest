@@ -28,23 +28,23 @@ public class BasicOreMining extends Department {
 
 
     @Override
-    public void create() {
-        
-        wc.getPlayerInput().startCitySelection(1, 3);
-        
+    public void startBuild() {
+
+        wc.getPlayerInput().startCitySelection(1, 3, this);
+
     }
 
-    public void endCreate() {
+    @Override
+    public void endBuild() {
         ArrayList<City> cities;
         cities = wc.getPlayerInput().getSelectedCities();
         wc.getPlayerInput().endCitySelection();
 
         for (City city : cities) {
-            city.addBuilding(new BasicOreMine(wc,city));
+            BasicOreMine mine = new BasicOreMine(wc, city);
+            buildings.add(mine);
+            city.addBuilding(mine);
         }
-
-
     }
-
 
 }
