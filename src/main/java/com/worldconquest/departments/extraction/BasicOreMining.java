@@ -2,6 +2,7 @@ package com.worldconquest.departments.extraction;
 
 import java.util.ArrayList;
 
+import com.worldconquest.Business;
 import com.worldconquest.City;
 import com.worldconquest.WorldConquest;
 import com.worldconquest.buildings.BasicOreMine;
@@ -13,11 +14,10 @@ public class BasicOreMining extends Department {
     
     
 
-    public BasicOreMining(WorldConquest wc) {
-        super(wc, DepartmentType.Extraction, "Basic Ore Mining",10000000);
-        
-       
-        
+    public BasicOreMining(WorldConquest wc, Business business) {
+        super(wc, DepartmentType.Extraction, "Basic Ore Mining",10000000, business);
+
+
     }
 
     @Override
@@ -41,7 +41,7 @@ public class BasicOreMining extends Department {
         wc.getPlayerInput().endCitySelection();
 
         for (City city : cities) {
-            BasicOreMine mine = new BasicOreMine(wc, city);
+            BasicOreMine mine = new BasicOreMine(wc, city, business, this);
             buildings.add(mine);
             city.addBuilding(mine);
         }

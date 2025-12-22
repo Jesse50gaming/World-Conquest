@@ -60,12 +60,24 @@ public class PlayerInput implements ActionListener, AnalogListener {
             if (mousestate == MouseStates.CITYSELECTION) {
                 addToSelection();
 
+            } else if (mousestate == MouseStates.NORMAL) {
+                openCityPanel();
             }
         }
     }
 
     public void update() {
 
+    }
+
+    private void openCityPanel() {
+        City city = wc.getClosestCity();
+
+        if (city == null) return;
+
+        if (gui.getScreenState() == ScreenState.GAME) {
+            gui.newCityPanel(city);
+        }
     }
 
     private void addToSelection() {

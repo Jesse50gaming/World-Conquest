@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.function.Supplier;
 
+import org.w3c.dom.Text;
+
 import com.jme3.niftygui.NiftyJmeDisplay;
 import com.jme3.system.AppSettings;
 import com.worldconquest.City;
 import com.worldconquest.WorldConquest;
+import com.worldconquest.buildings.Building;
 import com.worldconquest.departments.Department;
 
 import de.lessvoid.nifty.Nifty;
@@ -125,6 +128,7 @@ public class Gui implements ScreenController {
     //Business Departments
     public static HashMap<String, Department> departmentButtonIDs;
     public static HashMap<String, Department> departmentPanelIDs;
+    public static HashMap<String, City> cityPanelIDs;
 
     public enum ScreenState {
         START_GAME,
@@ -159,6 +163,7 @@ public class Gui implements ScreenController {
         changingTextSupplier = new HashMap<>();
         departmentButtonIDs = new HashMap<>();
         departmentPanelIDs = new HashMap<>();
+        cityPanelIDs = new HashMap<>();
         AppSettings settings = wc.getContext().getSettings();
         screenHeight = settings.getHeight();
         screenWidth = settings.getWidth();
@@ -1110,7 +1115,7 @@ public class Gui implements ScreenController {
                 visible(true);
 
                 childLayoutVertical();
-                closeable(true);
+                closeable(false);
 
                 // Content 
                 panel(new PanelBuilder(panelId + "_content") {
@@ -1183,6 +1188,144 @@ public class Gui implements ScreenController {
             }
         }.build(nifty, gameScreen, popupLayer);
 
+    }
+
+    public void newCityPanel(City city) {
+        Screen gameScreen = nifty.getScreen(SCREEN_GAME);
+        if (gameScreen == null) return;
+        Element popupLayer = gameScreen.findElementById(POP_UP_LAYER);
+        if (popupLayer == null) return;
+
+        String panelId = city.getName() + "_Panel";
+
+        if (gameScreen.findElementById(panelId) != null) return;
+        cityPanelIDs.put(panelId, city);
+
+        Element window = new WindowBuilder(panelId, city.getName() + ", " + city.getCountry().getName()) {
+            {
+                x("10%");
+                y("25%");
+                width("30%");
+                height("40%");
+                visible(true);
+
+                childLayoutVertical();
+                closeable(true);
+
+                // Content 
+                panel(new PanelBuilder(panelId + "_content") {
+                    {
+                        width("100%");
+                        height("100%");
+                        childLayoutHorizontal();
+                        backgroundImage(BUSINESS_PANEL_IMAGE);
+
+                        panel(new PanelBuilder(panelId + "_LEFT") {
+                            {
+                                width("50%");
+                                height("100%");
+                                childLayoutVertical();
+
+                            }
+
+                        });
+
+                        panel(new PanelBuilder(panelId + "_RIGHT") {
+                            {
+                                width("50%");
+                                height("100%");
+                                childLayoutVertical();
+
+                                text(new TextBuilder(panelId + "_BuildingTitle") {
+                                    {
+                                        text("Buildings");
+                                        font(scaleFont(ZEN_16, ZEN_12));
+                                        height("5%");
+                                        width("100%");
+                                        alignCenter();
+                                    }
+                                });
+
+                                control(new ScrollPanelBuilder(panelId + "_BuildingScrollPanel") {
+                                    {
+                                        width("100%");
+                                        height("95%");
+                                        childLayoutVertical();
+
+                                        panel(new PanelBuilder(panelId + "_Buildings") {
+                                            {
+                                                height("100%");
+                                                width("100%");
+                                                childLayoutVertical();
+                                                alignCenter();
+                                                backgroundImage(BUSINESS_PANEL_IMAGE);
+
+                                                for (Building building : city.getBuildings()) {
+                                                    panel(new PanelBuilder() {
+                                                        {
+                                                            width("100%");
+                                                            height("20%");
+                                                            backgroundImage(BUSINESS_PANEL_IMAGE);
+                                                            childLayoutHorizontal();
+
+                                                            text(new TextBuilder() {
+                                                                {
+                                                                    text(building.getName());
+                                                                    font(scaleFont(ZEN_16, ZEN_12));
+                                                                    height("100%");
+                                                                    width("50%");
+                                                                    valignCenter();
+                                                                }
+                                                            });
+
+                                                            text(new TextBuilder(panelId + building.getName() + "_NumberOfBuildings") {
+                                                                {
+                                                                    text("number");
+                                                                    changingText(panelId + building.getName() + "_NumberOfBuildings", SCREEN_GAME, () -> city.getNumberOfBuildings(building.getName()));
+                                                                    font(scaleFont(ZEN_16, ZEN_12));
+                                                                    height("100%");
+                                                                    width("10%");
+                                                                    valignCenter();
+                                                                }
+                                                            });
+
+                                                            control(new ButtonBuilder(panelId + "_SellButton", "Sell 1") {
+                                                                {
+                                                                    height("100%");
+                                                                    width("30%");
+                                                                    style(scaleFont(BUTTON_STYLE_16, BUTTON_STYLE_12));
+                                                                    alignCenter();
+                                                                    interactOnClick("sellBuilding(" + panelId + "," + building.getName() + ")");
+                                                                }
+                                                            });
+
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+
+                    }
+                });
+
+            }
+        }.build(nifty, gameScreen, popupLayer);
+
+    }
+    
+    public void sellBuilding(String panelId, String buildingName) {
+        City city = cityPanelIDs.get(panelId);
+        if (city == null) {
+            System.out.println("sellBuilding called with invalid panelId: " + panelId);
+            return;
+        }
+        Building building = city.getBuilding(buildingName);
+
+        city.removeBuilding(building, building.getDepartment());
     }
     
     public void cancelBuild(String windowPanelID) {

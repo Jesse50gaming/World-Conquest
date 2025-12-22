@@ -2,6 +2,7 @@ package com.worldconquest;
 
 
 import java.util.ArrayList;
+import java.util.function.Supplier;
 
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
@@ -10,6 +11,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
 import com.jme3.scene.shape.Cylinder;
 import com.worldconquest.buildings.Building;
+import com.worldconquest.departments.Department;
 import com.worldconquest.util.Coordinate;
 
 public class City {
@@ -133,9 +135,42 @@ public class City {
         return coordinates;
     }
 
+    public Country getCountry() {
+        return country;
+    }
+
+    public ArrayList<Building> getBuildings() {
+        return buildings;
+    }
+
     public void addBuilding(Building building) {
         buildings.add(building);
 
+    }
+    
+    public String getNumberOfBuildings(String buildingName) {
+        int count = 0;
+        for (Building building : buildings) {
+            if (building.getName().equals(buildingName)) {
+                count++;
+            }
+        }
+        return Integer.toString(count);
+    }
+
+    public void removeBuilding(Building building, Department department) {
+        
+        department.removeBuilding(building);
+        buildings.remove(building);
+    }
+
+    public Building getBuilding(String buildingName) {
+        for (Building building : buildings) {
+            if (building.getName().equals(buildingName)) {
+                return building;
+            }
+        }
+        return null;
     }
     
     

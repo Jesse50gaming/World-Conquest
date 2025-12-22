@@ -2,6 +2,7 @@ package com.worldconquest.departments;
 
 import java.util.ArrayList;
 
+import com.worldconquest.Business;
 import com.worldconquest.WorldConquest;
 import com.worldconquest.buildings.Building;
 
@@ -16,12 +17,14 @@ public abstract class Department {
     String name = "unnamed";
     Element window;
     protected ArrayList<Building> buildings = new ArrayList<>();
+    protected Business business;
 
-    public Department(WorldConquest wc, DepartmentType departmentType,String name, int buildingCost) {
+    public Department(WorldConquest wc, DepartmentType departmentType,String name, int buildingCost, Business business) {
         this.wc = wc;
         this.departmentType = departmentType;
         this.name = name;
         this.buildingCost = buildingCost;
+        this.business = business;
         init();
     }
 
@@ -79,6 +82,10 @@ public abstract class Department {
     
     public int getBuildingCost() {
         return buildingCost;
+    }
+
+    public void removeBuilding(Building building) {
+        buildings.remove(building);
     }
 
 }

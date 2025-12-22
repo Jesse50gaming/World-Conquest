@@ -211,10 +211,10 @@ public class WorldConquest extends SimpleApplication {
             gui.newGameScreen();
             return;
         } else if (chosenDepartment.equals("Basic Ore Mining")) {
-            startingDepartment = new BasicOreMining(this);
+            startingDepartment = new BasicOreMining(this, player);
         } else {
             System.err.println("error no starting department chose or " + chosenDepartment + "doesn't exist");
-            startingDepartment = new BasicOreMining(this);
+            startingDepartment = new BasicOreMining(this, player);
         }
 
         
