@@ -1168,7 +1168,7 @@ public class Gui implements ScreenController {
     }
     
     public void endBuild(String departmentPanelID) {
-        
+
         Department department = departmentPanelIDs.get(departmentPanelID);
         if (department == null) {
             System.out.println("endBuild called with invalid departmentPanelID: " + departmentPanelID);
@@ -1178,16 +1178,23 @@ public class Gui implements ScreenController {
             }
             return;
         }
-        
 
         if (!wc.getPlayerInput().selectedCitiesNumValid()) {
             updateText(department.getName() + "_Window_ErrorText", "Not enough cities selected");
             return;
         }
         department.endBuild();
+        removeElement(department.getName() + "_Window");
+    }
+    
+    public void removeElement(String id) {
         Screen screen = nifty.getCurrentScreen();
-        Element window = screen.findElementById(department.getName() + "_Window");
-        window.markForRemoval();
+        if(screen == null) return;
+        Element element = screen.findElementById(id);
+        if (element != null) {
+            element.markForRemoval();
+        }
+
     }
 
 
