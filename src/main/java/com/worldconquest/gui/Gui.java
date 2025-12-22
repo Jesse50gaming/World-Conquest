@@ -1103,10 +1103,10 @@ public class Gui implements ScreenController {
 
         Element window = new WindowBuilder(panelId, "Build") {
             {
-                x("50%");
-                y("60%");
-                width("30%");
-                height("40%");
+                x("10%");
+                y("25%");
+                width("15%");
+                height("20%");
                 visible(true);
 
                 childLayoutVertical();
@@ -1138,7 +1138,7 @@ public class Gui implements ScreenController {
                                         height("100%");
                                         width("33%");
                                         valignCenter();
-                                        style(scaleFont(BUTTON_STYLE_32, BUTTON_STYLE_24));
+                                        style(scaleFont(BUTTON_STYLE_16, BUTTON_STYLE_12));
                                         alignCenter();
                                         interactOnClick("endBuild(" + departmentPanelID + ")");
                                     }
@@ -1149,7 +1149,7 @@ public class Gui implements ScreenController {
                                         height("100%");
                                         width("33%");
                                         valignCenter();
-                                        style(scaleFont(BUTTON_STYLE_32, BUTTON_STYLE_24));
+                                        style(scaleFont(BUTTON_STYLE_16, BUTTON_STYLE_12));
                                         alignCenter();
                                         interactOnClick("cancelBuild(" + panelId + ")");
                                     }
@@ -1159,7 +1159,7 @@ public class Gui implements ScreenController {
                                         height("100%");
                                         width("33%");
                                         valignCenter();
-                                        style(scaleFont(BUTTON_STYLE_32, BUTTON_STYLE_24));
+                                        style(scaleFont(BUTTON_STYLE_16, BUTTON_STYLE_12));
                                         alignCenter();
                                         interactOnClick("clearSelection()");
                                     }
