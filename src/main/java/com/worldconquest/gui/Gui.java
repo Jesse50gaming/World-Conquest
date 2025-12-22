@@ -15,6 +15,7 @@ import de.lessvoid.nifty.builder.PanelBuilder;
 import de.lessvoid.nifty.builder.ScreenBuilder;
 import de.lessvoid.nifty.builder.StyleBuilder;
 import de.lessvoid.nifty.builder.TextBuilder;
+import de.lessvoid.nifty.controls.Button;
 import de.lessvoid.nifty.controls.button.builder.ButtonBuilder;
 import de.lessvoid.nifty.controls.scrollpanel.builder.ScrollPanelBuilder;
 import de.lessvoid.nifty.controls.textfield.builder.TextFieldBuilder;
@@ -539,13 +540,13 @@ public class Gui implements ScreenController {
                                 valignCenter();
                                 childLayoutHorizontal();
 
-                                control(new ButtonBuilder(BUTTON_BASIC_ORE, "Basic Ore Mining") {
+                                control(new ButtonBuilder(BUTTON_BASIC_ORE, "Basic Ore \n Mining") {
                                     {
                                         style(scaleFont(BUTTON_STYLE_32, BUTTON_STYLE_24));
                                         height("100%");
                                         width("30%");
                                         alignCenter();
-                                        startingDepartmentsButtons.put("Basic Ore \n Mining", BUTTON_BASIC_ORE);
+                                        startingDepartmentsButtons.put("Basic Ore Mining", BUTTON_BASIC_ORE);
                                         interactOnClick("chooseDepartment(Basic Ore Mining)");
                                     }
                                 });
@@ -556,14 +557,14 @@ public class Gui implements ScreenController {
                                     }
                                 });
 
-                                control(new ButtonBuilder(BUTTON_BUS_TRANSPORT, "Bus Transportation") {
+                                control(new ButtonBuilder(BUTTON_BUS_TRANSPORT, "Bus \n Transportation") {
                                     {
                                         height("100%");
                                         width("30%");
                                         startingDepartmentsButtons.put("Bus Transportation", BUTTON_BUS_TRANSPORT);
                                         style(scaleFont(BUTTON_STYLE_32, BUTTON_STYLE_24));
                                         alignCenter();
-                                        interactOnClick("chooseDepartment(Bus \n Transportation)"); //TODO fix font
+                                        interactOnClick("chooseDepartment(Bus Transportation)"); 
                                     }
                                 });
 
@@ -780,7 +781,7 @@ public class Gui implements ScreenController {
                                         text(new TextBuilder(TEXT_DATE) {
                                             {
                                                 text("not set");
-                                                font(scaleFont(ZEN_32, ZEN_24));
+                                                font(scaleFont(ZEN_32, ZEN_16));
                                                 changingText(TEXT_DATE, SCREEN_GAME, () -> wc.getDate());
                                                 alignLeft();
                                                 width("100%");
@@ -871,6 +872,8 @@ public class Gui implements ScreenController {
     public Nifty getNifty() {
         return nifty;
     }
+
+    
 
     public void updateDepartments(Department department) {
         if (departments.contains(department)) return;
@@ -1089,6 +1092,76 @@ public class Gui implements ScreenController {
         }
     }
 
+    public void newBuildWindow(Department department) {
+        Screen gameScreen = nifty.getScreen(SCREEN_GAME);
+        if (gameScreen == null) return;
+        Element popupLayer = gameScreen.findElementById(POP_UP_LAYER);
+        if (popupLayer == null) return;
+
+        String panelId = department.getName() + " _BuildWindow";
+
+        Element window = new WindowBuilder(panelId, "Build") {
+            {
+                x("35%");
+                y("30%");
+                width("30%");
+                height("40%");
+                visible(true);
+                backgroundImage(BUSINESS_PANEL_IMAGE);
+
+                childLayoutVertical();
+                closeable(false);
+
+                panel(new PanelBuilder(panelId + "_header") {
+                    {
+                        height("3%");
+                        childLayoutAbsolute();
+                        padding("0px");
+                        margin("0px");
+                        valignTop();
+
+                        // Close button
+                        control(new ButtonBuilder(panelId + "_closeBtn", "X") {
+                            {
+                                padding("0px");   
+                                margin("0px");
+                                x("95%");
+                                y("-165%");
+                                width("5%");
+                                height("100%");
+                                style(scaleFont(BUTTON_STYLE_16, BUTTON_STYLE_12));
+                                interactOnClick("openDepartmentPanel(" + panelId + ")");
+                            }
+                        });
+                    }
+                });
+
+                // Content placeholder
+                panel(new PanelBuilder(panelId + "_content") {
+                    {
+                        width("100%");
+                        height("97%");
+                        childLayoutHorizontal();
+
+                        control(new ButtonBuilder(panelId + "_buildBtn", "Build") {
+                            {
+                                height("50%");
+                                width("100%");
+                                valignCenter();
+                                style(scaleFont(BUTTON_STYLE_32, BUTTON_STYLE_24));
+                                alignCenter();
+                                interactOnClick("");
+                            }//TODO do
+                        });
+                    }
+                });
+
+            }
+        }.build(nifty, gameScreen, popupLayer);
+
+        
+    }
+
     public void buildNew(String departmentPanelID) {
         
         departmentPanelIDs.get(departmentPanelID).create();
@@ -1099,4 +1172,3 @@ public class Gui implements ScreenController {
     }
 
 }
-
