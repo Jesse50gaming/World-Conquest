@@ -1,5 +1,6 @@
 package com.worldconquest.gui;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.function.Supplier;
@@ -1259,8 +1260,12 @@ public class Gui implements ScreenController {
                                                 childLayoutVertical();
                                                 alignCenter();
                                                 backgroundImage(BUSINESS_PANEL_IMAGE);
-
+                                                ArrayList<String> buildingNames = new ArrayList<>();
                                                 for (Building building : city.getBuildings()) {
+                                                    if (buildingNames.contains(building.getName())) {
+                                                        continue;
+                                                    }
+                                                    buildingNames.add(building.getName());
                                                     panel(new PanelBuilder() {
                                                         {
                                                             width("100%");
