@@ -21,6 +21,14 @@ public class TechTree {
     }
 
     private void updatePosition() {
+        Tech rootTech;
+        for (Tech tech : techs) {
+            if (tech.getPreReqs().isEmpty() || tech.getPreReqs() == null) {
+                rootTech = tech;
+                // Set position of rootTech
+            }
+        }
+
         
     }
 }
