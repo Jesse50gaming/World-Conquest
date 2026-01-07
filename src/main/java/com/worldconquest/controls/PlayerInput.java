@@ -132,9 +132,8 @@ public class PlayerInput implements ActionListener, AnalogListener {
     }
 
     public ArrayList<City> getSelectedCities() {
-        ArrayList<City> cities = new ArrayList();
-        cities.addAll(selectedCities);
-        return cities;
+        
+        return new ArrayList<>(selectedCities);
     }
 
     public void clearSelection() {
