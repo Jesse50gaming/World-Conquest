@@ -2,7 +2,8 @@ package com.worldconquest.technology;
 
 
 import java.util.HashMap;
-import java.util.Vector;
+
+import com.jme3.math.Vector2f;
 
 public class Tech {
 
@@ -17,6 +18,10 @@ public class Tech {
 
     public boolean isResearched() {
         return researched;
+    }
+
+    public HashMap<Tech, Integer> getPreReqs() {
+        return preReqs;
     }
 
     public void setCoord(Vector2f coords) {
