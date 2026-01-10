@@ -1,6 +1,6 @@
 package com.worldconquest.technology;
 
-import java.lang.reflect.Array;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -13,6 +13,7 @@ public class TechTree {
 
     public TechTree(ArrayList<Tech> techs) {
         this.techs = techs;
+        updatePosition();
     }
 
     public void addTech(Tech tech) {

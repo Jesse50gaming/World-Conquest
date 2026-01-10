@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.worldconquest.Business;
 import com.worldconquest.WorldConquest;
 import com.worldconquest.buildings.Building;
+import com.worldconquest.technology.TechTree;
 
 import de.lessvoid.nifty.elements.Element;
 
@@ -18,8 +19,9 @@ public abstract class Department {
     Element window;
     protected ArrayList<Building> buildings = new ArrayList<>();
     protected Business business;
+    protected TechTree techTree;
 
-    public Department(WorldConquest wc, DepartmentType departmentType,String name, int buildingCost, Business business) {
+    public Department(WorldConquest wc, DepartmentType departmentType, String name, int buildingCost, Business business) {
         this.wc = wc;
         this.departmentType = departmentType;
         this.name = name;
@@ -27,6 +29,8 @@ public abstract class Department {
         this.business = business;
         init();
     }
+    
+    
 
     public void update() {
         doAction();
