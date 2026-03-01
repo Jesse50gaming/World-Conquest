@@ -10,6 +10,7 @@ public class Business {
     int money = 0;
     String name;
     ArrayList<Department> departments;
+    TechTree techTree;
 
     public Business(String name, WorldConquest wc) {
         this.wc = wc;
