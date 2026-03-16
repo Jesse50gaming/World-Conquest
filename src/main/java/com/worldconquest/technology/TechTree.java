@@ -2,9 +2,7 @@ package com.worldconquest.technology;
 
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
-import com.jme3.math.Vector2f;
 
 public class TechTree {
 

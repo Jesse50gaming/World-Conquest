@@ -1,49 +1,54 @@
 package com.worldconquest.technology;
 
+import java.util.ArrayList;
 
-import java.util.HashMap;
 
 import com.jme3.math.Vector2f;
 
+
 public class Tech {
 
-    private boolean researched = false;
-    private int level = 0;
-    private HashMap<Tech, Integer> preReqs;
-    private Vector2f coords;
+    boolean unlocked = false;
+    boolean researched = false;
+    String name;
+    Vector2f coord;
+    //TODO:Add picture later
+    ArrayList<Tech> preReqs;
 
-    public Tech(HashMap<Tech, Integer> preReqs) {
+    public Tech(String name,ArrayList<Tech> preReqs, Vector2f coord) {
         this.preReqs = preReqs;
+        this.name = name;
+        this.coord = coord;
     }
 
-    public boolean isResearched() {
-        return researched;
-    }
-
-    public HashMap<Tech, Integer> getPreReqs() {
-        return preReqs;
-    }
-
-    public void setCoord(Vector2f coords) {
-        this.coords = coords;
+    public boolean unlocked() {
+        unlocked = true;
+        for (Tech tech : preReqs) {
+            if (!tech.researched()) {
+                unlocked = false;
+            }
+        }
+        return unlocked;
     }
 
     public Vector2f getCoord() {
-        return coords;
-    }
-        
-
-    public boolean researchable() {
-        for (Tech tech : preReqs.keySet()) {
-            if (!tech.isResearched() || tech.getLevel() < preReqs.get(tech)) {
-                return false;
-            }
-        }
-        return true;
+        return coord;
     }
 
-    public int getLevel() {
-        return level;
+    public void unlock() {
+        unlocked = true;
+    }
+    
+    public void lock() {
+        unlocked = false;
+    }
+
+    public boolean researched() {
+        return researched;
+    }
+
+    public String getName() {
+        return name;
     }
 
 }
